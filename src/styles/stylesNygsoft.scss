@@ -1,0 +1,85 @@
+// Write your overrides
+$layout-boxed-content-width: auto !important ;
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.justify-content-start {
+  justify-content: start !important;
+}
+
+.justify-content-end {
+  justify-content: end !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.justify-content-around {
+  justify-content: space-around !important;
+}
+
+.justify-content-evenly {
+  justify-content: space-evenly !important;
+}
+
+.align-items-start {
+  align-items: start !important;
+}
+
+.align-items-end {
+  align-items: end !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.align-items-baseline {
+  align-items: baseline !important;
+}
+
+.align-items-stretch {
+  align-items: stretch !important;
+}
+
+.iconsBoats {
+  display: block;
+  border: 0.0625rem solid black;
+  border-radius: 0.3125rem;
+  block-size: 4.0625rem;
+  inline-size: 4.0625rem;
+}
+
+.iconsBoats:hover {
+  border: 0.0625rem solid #31a6fb;
+  background: #31a6fb;
+  color: white;
+  cursor: pointer;
+}
+
+.iconTheme {
+  font-size: 250%;
+  margin-block-start: 0.625rem;
+  margin-inline-start: 0.5625rem !important;
+}
+
+.text-icon {
+  position: absolute;
+  inline-size: 100px;
+  margin-block-start: 30px !important;
+  margin-inline-start: -17px;
+}
+
+@each $size in 100 {
+  .w-#{$size} {
+    inline-size: $size;
+  }
+}
+
+
+.my-swal {
+  z-index: 999999 !important;
+}
