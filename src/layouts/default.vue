@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { useSkins } from '@core/composable/useSkins'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 

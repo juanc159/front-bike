@@ -20,15 +20,12 @@ const props = withDefaults(defineProps<Props>(), {
         variant="tonal"
         :color="props.color"
       >
-        <VIcon
-          :icon="props.icon"
-          size="24"
-        />
+        <VIcon :icon="props.icon" />
       </VAvatar>
 
-      <h6 class="text-h6 font-weight-semibold my-2">
+      <h5 class="text-h5 my-2">
         {{ props.stats }}
-      </h6>
+      </h5>
       <span class="text-body-2">{{ props.title }}</span>
     </VCardText>
   </VCard>

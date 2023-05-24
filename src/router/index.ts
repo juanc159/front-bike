@@ -1,13 +1,9 @@
- import { setupLayouts } from 'virtual:generated-layouts'
+import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import routes from '~pages' 
+import routes from '~pages'
 
-import { AuthenticationStore } from '@/stores/Authentication'
-// lazy load
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore'
 
-const importPage = (view:string) => () =>
-  import(/* webpackChunkName: "p-[request]" */ `./views/${view}.vue`)
-  
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,8 +15,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const authentication = AuthenticationStore() // obtiene el usuario actual
-  const { isAuthenticate, permissions } = storeToRefs(authentication)
+  const authenticationStore = useAuthenticationStore() // obtiene el usuario actual
+  const { isAuthenticate, permissions } = storeToRefs(authenticationStore)
 
   if (requiresAuth && !isAuthenticate.value) {
     next('/login') // redirige al usuario al login si la ruta requiere autenticación y el usuario no está autenticado
@@ -35,4 +31,4 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-export default router // importa tu servicio de autenticación
+export default router

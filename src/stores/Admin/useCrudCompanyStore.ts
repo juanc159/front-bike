@@ -1,13 +1,13 @@
-import { defineStore } from 'pinia'
-import { ref } from "vue";
+import { defineStore } from 'pinia';
 import Swal from 'sweetalert2';
-import 'sweetalert2/src/sweetalert2.scss'
+import 'sweetalert2/src/sweetalert2.scss';
+import { ref } from "vue";
 
+import { useToast } from "@/composables/useToast";
+import type ICompanyList from "@/interfaces/Admin/Company/ICompanyList";
 import type IFormCompany from "@/interfaces/Admin/Company/IFormCompany";
 import axiosIns from "@/plugins/axios";
-import { useToast } from "@/composables/useToast";
-import type ICompanyList from "@/interfaces/Admin/Company/ICompanyList"; 
-import {usePreloadStore} from '@/stores/usePreloadStore';
+import { usePreloadStore } from '@/stores/usePreloadStore';
 const toast = useToast();
 
 export const useCrudCompanyStore = defineStore('useCrudCompanyStore', {

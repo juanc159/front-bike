@@ -1,5 +1,6 @@
+import type { IconProps } from '@iconify/vue'
 import { Icon } from '@iconify/vue'
-import type { IconAliases, IconProps, IconSet } from 'vuetify'
+import type { IconAliases, IconSet } from 'vuetify'
 
 const aliases: IconAliases = {
   collapse: 'tabler-chevron-up',
@@ -36,11 +37,13 @@ const aliases: IconAliases = {
   file: 'tabler-paperclip',
   plus: 'tabler-plus',
   minus: 'tabler-minus',
+  sortAsc: 'tabler-arrow-up',
+  sortDesc: 'tabler-arrow-down',
 }
 
-export const iconify: IconSet = {
+export const iconify = {
   component: (props: IconProps) => h(Icon, props),
-}
+} as IconSet
 
 export const icons = {
   defaultSet: 'iconify',

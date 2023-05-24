@@ -1,14 +1,15 @@
 <script lang="ts" setup type="module">
-import Swal from 'sweetalert2';
-import { AuthenticationStore } from '@/stores/Authentication';
-import { useCrudCompanyStore } from "@/stores/Admin/useCrudCompanyStore";
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
+import { useCrudCompanyStore } from '@/stores/Admin/useCrudCompanyStore';
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
+import Swal from 'sweetalert2';
 
-const  companyStoreUseCrud = useCrudCompanyStore();
-const auth = AuthenticationStore();
-const router = useRouter(); 
-const { currentPage,totalPage, lastPage, totalData,companies, loading } =
-  storeToRefs(companyStoreUseCrud);
+const companyStoreUseCrud = useCrudCompanyStore()
+const auth = useAuthenticationStore()
+const router = useRouter()
+
+const { currentPage, totalPage, lastPage, totalData, companies, loading }
+  = storeToRefs(companyStoreUseCrud)
 
 // menu data paginate
 const rowPerPage = ref<number>(10)
@@ -16,16 +17,15 @@ const searchQuery = ref<string>('')
 
 const fetchCompanies = async () => {
   await companyStoreUseCrud.fetchAll({
-    user_id:auth.user.id,
+    user_id: auth.user.id,
     perPage: rowPerPage.value,
     page: currentPage.value,
     searchQuery: searchQuery.value,
   })
 }
 
-onMounted(async () => {  
-  await fetchCompanies(); 
-  
+onMounted(async () => {
+  await fetchCompanies()
 })
 
 watch(currentPage, async () => {
@@ -33,7 +33,7 @@ watch(currentPage, async () => {
     currentPage.value = totalPage.value
 })
 watch(rowPerPage, async () => {
-  currentPage.value =1
+  currentPage.value = 1
 })
 watchArray([currentPage, searchQuery, rowPerPage], async () => {
   await fetchCompanies()
@@ -41,7 +41,6 @@ watchArray([currentPage, searchQuery, rowPerPage], async () => {
 
 // 👉 Computing pagination data
 const paginationData = computed(() => {
-  
   const firstIndex = companies.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
   const lastIndex = companies.value.length + ((currentPage.value - 1) * totalPage.value)
 
@@ -49,22 +48,20 @@ const paginationData = computed(() => {
 })
 
 const changeScreen = async (screen: string, companyId?: number) => {
-  companyStoreUseCrud.clearFormulario();
-  companyStoreUseCrud.typeAction = screen 
-  if (companyId) {
+  companyStoreUseCrud.clearFormulario()
+  companyStoreUseCrud.typeAction = screen
+  if (companyId)
     companyStoreUseCrud.fetchInfoCompany(companyId)
-  };
 }
 
-
-const selectCompany = (company:object)=>{
-  auth.company = company;
+const selectCompany = (company: object) => {
+  auth.company = company
   router.push({ name: 'index' })
 }
 
-//Accion cambio de estado
-const changeState = async(object:object,state:number) => {
-  companyStoreUseCrud.changeState(object,state);
+// Accion cambio de estado
+const changeState = async (object: object, state: number) => {
+  companyStoreUseCrud.changeState(object, state)
 }
 
 const deleteData = async (id: number) => {
@@ -111,13 +108,13 @@ const deleteData = async (id: number) => {
           placeholder="Buscar"
           density="compact"
         />
-      </div> 
-        <VBtn
-          color="primary"
-          @click="changeScreen('form')"
-        >
-          Crear empresa
-        </VBtn> 
+      </div>
+      <VBtn
+        color="primary"
+        @click="changeScreen('form')"
+      >
+        Crear empresa
+      </VBtn>
     </div>
   </VContainer>
 
@@ -151,12 +148,13 @@ const deleteData = async (id: number) => {
     </thead>
     <tbody>
       <tr v-show="loading">
-          <td colspan="7" >
-            <PreloadInterno /> 
-          </td>
-        </tr>
-      <tr v-show="!loading"
-        v-for="(item,index) in companies"
+        <td colspan="7">
+          <PreloadInterno />
+        </td>
+      </tr>
+      <tr
+        v-for="(item, index) in companies"
+        v-show="!loading"
         :key="index"
         style="height: 3.75rem;"
       >
@@ -174,29 +172,29 @@ const deleteData = async (id: number) => {
           <span>
             Plan
           </span>
-        </td>  
+        </td>
         <td>
           <span>
             {{ item.nameLegalRepresentative }}
           </span>
-        </td> 
+        </td>
         <td>
           <span>
             {{ item.phoneLegalRepresentative }}
           </span>
-        </td> 
+        </td>
         <td>
-            <v-switch
-              v-model="item.state"
-              color="success"
-              inset
-              :value="item.state"
-              :true-value="1"
-              :false-value="0"
-              hide-details
-              @click="changeState(item,item.state)"
-            ></v-switch>
-          </td>
+          <VSwitch
+            v-model="item.state"
+            color="success"
+            inset
+            :value="item.state"
+            :true-value="1"
+            :false-value="0"
+            hide-details
+            @click="changeState(item, item.state)"
+          />
+        </td>
         <td
           class="text-center"
           style="width: 5rem;"
@@ -227,7 +225,7 @@ const deleteData = async (id: number) => {
             />
           </VBtn>
           <VBtn
-          v-show="item.state === 1"
+            v-show="item.state === 1"
             color="primary"
             @click="selectCompany(item)"
           >
@@ -258,7 +256,7 @@ const deleteData = async (id: number) => {
     <span class="text-sm text-disabled">
       {{ paginationData }}
     </span>
- 
+
     <VPagination
       v-model="currentPage"
       size="small"

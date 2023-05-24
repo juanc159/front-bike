@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { useLayouts } from '@layouts'
 import { config } from '@layouts/config'
 import { can } from '@layouts/plugins/casl'

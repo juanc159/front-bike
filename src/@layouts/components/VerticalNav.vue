@@ -1,13 +1,11 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
+import type { Component } from 'vue'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { VNodeRenderer } from './VNodeRenderer'
 import { injectionKeyIsVerticalNavHovered, useLayouts } from '@layouts'
 import { VerticalNavGroup, VerticalNavLink, VerticalNavSectionTitle } from '@layouts/components'
 import { config } from '@layouts/config'
 import type { NavGroup, NavLink, NavSectionTitle, VerticalNavItems } from '@layouts/types'
-import type { Component } from 'vue'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { VNodeRenderer } from './VNodeRenderer'
-import { AuthenticationStore } from '@/stores/Authentication'
-const auth = AuthenticationStore()
 
 interface Props {
   tag?: string | Component
@@ -73,27 +71,21 @@ const handleNavScroll = (evt: Event) => {
       },
     ]"
   >
-    <!-- 👉 Header --> 
+    <!-- 👉 Header -->
     <div class="nav-header">
       <slot name="nav-header">
         <RouterLink
           to="/"
           class="app-logo d-flex align-center gap-x-3 app-title-wrapper"
-        > 
-        <VAvatar
-            class="cursor-pointer"
-            color="primary"
-            variant="tonal"
-          >
-        <VImg :src="auth.company?.logo" />
-        </VAvatar>
+        >
+          <VNodeRenderer :nodes="config.app.logo" />
 
           <Transition name="vertical-nav-app-title">
             <h1
               v-show="!hideTitleAndIcon"
-              class="app-title font-weight-bold leading-normal text-xl"
+              class="app-title font-weight-bold text-capitalize leading-normal text-xl"
             >
-              {{ auth.company.name ?? config.app.title }}
+              {{ config.app.title }}
             </h1>
           </Transition>
         </RouterLink>

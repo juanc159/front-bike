@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useTheme } from 'vuetify'
+
+const { global } = useTheme()
+
 const authProviders = [
   {
     icon: 'fa-facebook',
@@ -23,7 +27,7 @@ const authProviders = [
       icon
       variant="tonal"
       size="38"
-      :color="link.color"
+      :color="global.name.value === 'dark' ? link.colorInDark : link.color"
       class="rounded"
     >
       <VIcon

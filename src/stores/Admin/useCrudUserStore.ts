@@ -1,13 +1,14 @@
-import axiosIns from '@/plugins/axios';
-import { defineStore } from 'pinia';
-import { useToast } from '@/composables/useToast';
-import Swal from 'sweetalert2';
-import IUserForm from '@/interfaces/Admin/User/IUserForm';
-import IUserList from '@/interfaces/Admin/User/IUserList';
-import { AuthenticationStore } from '@/stores/Authentication';
+import { useToast } from '@/composables/useToast'
+import type IUserForm from '@/interfaces/Admin/User/IUserForm'
+import type IUserList from '@/interfaces/Admin/User/IUserList'
+import axiosIns from '@/plugins/axios'
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore'
+import { defineStore } from 'pinia'
+import Swal from 'sweetalert2'
 
-import { usePreloadStore } from '@/stores/usePreloadStore';
-const authentication = AuthenticationStore();
+import { usePreloadStore } from '@/stores/usePreloadStore'
+
+const authenticationStore = useAuthenticationStore()
 
 const toast = useToast()
 
@@ -15,7 +16,7 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
   state: () => ({
     loading: true as boolean,
     formulario: {
-      email: '', 
+      email: '',
       name: '',
       lastName: '',
       role_id: null,
@@ -24,7 +25,7 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
       identification: '',
       phone: '',
     } as IUserForm,
-    typeAction: "list" as string,
+    typeAction: 'list' as string,
     userData: {} as IUserForm,
     keyList: 0 as number,
     users: [] as Array<IUserList>,
@@ -39,7 +40,7 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
   actions: {
     clearFormulario() {
       this.formulario = <IUserForm>{
-        email: '', 
+        email: '',
         name: '',
         lastName: '',
         role_id: null,
@@ -47,11 +48,6 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
         photo: null,
         identification: '',
         phone: '',
-      }
-    },
-    clonarForm() {
-      for (const key in this.formulario) {
-        this.userData[key] = this.formulario[key]
       }
     },
 
@@ -73,15 +69,15 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
       })
     },
 
-
     async fetchSave(): Promise<object> {
-      const preload=  usePreloadStore()
+      const preload = usePreloadStore()
       const formData = new FormData()
 
       for (const key in this.formulario)
         formData.append(key, this.formulario[key])
-      
-        preload.isLoading = true
+
+      preload.isLoading = true
+
       const response = await axiosIns.post(
         '/user-create',
         formData,
@@ -89,117 +85,110 @@ export const useCrudUserStore = defineStore('useCrudUserStore', {
         preload.isLoading = false
         if (result.data.code === 200) {
           this.formulario = result.data.data
-          this.clonarForm()
           this.clearFormulario()
           toast.toast('Éxito', result.data.message, 'success')
         }
 
         if (result.data.code === 500)
           toast.toast('Error', result.data.message, 'danger')
-        console.log(result.data.status);
+        console.log(result.data.status)
         if (result.data.status === 422) {
           toast.toast('Error', result.data.message, 'danger')
+
           return { error: result.data.errors, status: result.data.status }
         }
-        return { status: result.data.code };
+
+        return { status: result.data.code }
       }).catch(async error => {
         preload.isLoading = false
         if (error.response.status === 500)
           toast.toast('Error', error.response.data.message, 'danger')
         console.log(await error)
 
-        return { status: error.response.state };
+        return { status: error.response.state }
       })
 
       return await response
     },
 
-
     async fetchDataForm(): Promise<void> {
-      const preload=  usePreloadStore()
-      const form: object = { company_id: authentication.company.id }
+      const preload = usePreloadStore()
+      const form: object = { company_id: authenticationStore.company.id }
+
       preload.isLoading = true
       await axiosIns
-        .post("/user-dataForm", form)
-        .then((result) => {
+        .post('/user-dataForm', form)
+        .then(result => {
           preload.isLoading = false
-          this.arrayRoles = result.data.roles;
+          this.arrayRoles = result.data.roles
         })
-        .catch(async (error) => {
+        .catch(async error => {
           preload.isLoading = false
-          console.log(await error);
-        });
+          console.log(await error)
+        })
     },
 
-
     async fetchDelete(id: number): Promise<void> {
-      const preload=  usePreloadStore()
+      const preload = usePreloadStore()
+
       preload.isLoading = true
       await axiosIns.delete(
-        '/user-delete/' + id
+        `/user-delete/${id}`,
       ).then(result => {
         preload.isLoading = false
         toast.toast('Éxito', result.data.message, 'success')
-
       }).catch(async error => {
         preload.isLoading = false
         console.log(await error)
       })
     },
 
-    async fetchInfoUser(id: number): Promise<void> {
-      const preload=  usePreloadStore()
-      if (id !== this.userData.id) {
-        preload.isLoading = true
-        await axiosIns.get(
-          `/user-info/${id}`,
-        ).then(async result => {
-          console.log('RESULT', result)
-          preload.isLoading = false
-          this.formulario = await result.data.data
-          console.log("this.formulario",this.formulario);
-          
-          this.clonarForm()
-          this.userData.id = id
-        }).catch(async error => {
-          preload.isLoading = false
-          console.log(await error)
-        })
-      } else {
-        for (const key in this.userData) {
-          this.formulario[key] = this.userData[key]
-        }
-      }
+    async fetchInfo(id: number): Promise<void> {
+      const preload = usePreloadStore()
+      preload.isLoading = true
+      await axiosIns.get(
+        `/user-info/${id}`,
+      ).then(async result => {
+        console.log('RESULT', result)
+        preload.isLoading = false
+        this.formulario = await result.data.data
+        console.log('this.formulario', this.formulario)
+
+        this.userData.id = id
+      }).catch(async error => {
+        preload.isLoading = false
+        console.log(await error)
+      })
+
     },
 
     changeState(objeto: object, estado: number) {
-      const preload=  usePreloadStore()
-      let t = "";
-      estado == 0 ? (t = "activar") : (t = "inactivar");
+      const preload = usePreloadStore()
+      let t = ''
+      estado == 0 ? (t = 'activar') : (t = 'inactivar')
       Swal.fire({
-        title: "¿Está seguro de " + t + " el Registro seleccionado?",
+        title: `¿Está seguro de ${t} el Registro seleccionado?`,
         showDenyButton: true,
-        confirmButtonText: "Si",
-        denyButtonText: `No`,
+        confirmButtonText: 'Si',
+        denyButtonText: 'No',
         allowOutsideClick: false,
-      }).then((result) => {
+      }).then(result => {
         if (result.isConfirmed) {
           preload.isLoading = true
-          axiosIns.post("/user-changeState", objeto)
-            .then((res) => {
+          axiosIns.post('/user-changeState', objeto)
+            .then(res => {
               preload.isLoading = false
-              if (res.data.code == 200) {
-                toast.toast("Éxito", res.data.msg, "success");
-              }
-              if (res.data.code == 500) {
-                toast.toast("Éxito", res.data.msg, "danger");
-              }
-            });
-        } else {
-          t == 'activar' ? objeto.state = 0 : objeto.state = 1;
-        }
+              if (res.data.code == 200)
+                toast.toast('Éxito', res.data.msg, 'success')
 
-      });
+              if (res.data.code == 500)
+                toast.toast('Éxito', res.data.msg, 'danger')
+            })
+        }
+        else {
+          t == 'activar' ? objeto.state = 0 : objeto.state = 1
+        }
+      })
     },
   },
 })

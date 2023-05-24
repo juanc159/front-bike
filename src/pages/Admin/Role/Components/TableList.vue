@@ -1,29 +1,29 @@
 <script lang="ts" setup type="module">
-import Swal from 'sweetalert2';
-import {useCrudRoleStore} from '@/stores/Admin/useCrudRoleStore';
-import { AuthenticationStore } from '@/stores/Authentication';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
+import { useCrudRoleStore } from '@/stores/Admin/useCrudRoleStore';
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
+import Swal from 'sweetalert2';
 
-const authentication = AuthenticationStore();
-const storeRole = useCrudRoleStore();
-// menu data paginate 
-const {roles, totalPage, lastPage, currentPage, totalData,loading} = storeToRefs(storeRole)
+const authentication = useAuthenticationStore()
+const storeRole = useCrudRoleStore()
+
+// menu data paginate
+const { roles, totalPage, lastPage, currentPage, totalData, loading } = storeToRefs(storeRole)
 
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
 const fetchRoles = async () => {
   await storeRole.fetchAll({
-    company_id:authentication.company.id,
+    company_id: authentication.company.id,
     perPage: rowPerPage.value,
     page: currentPage.value,
     searchQuery: searchQuery.value,
   })
 }
 
-onMounted(async () => {  
-  await fetchRoles(); 
-  
+onMounted(async () => {
+  await fetchRoles()
 })
 
 watch(currentPage, async () => {
@@ -31,7 +31,7 @@ watch(currentPage, async () => {
     currentPage.value = totalPage.value
 })
 watch(rowPerPage, async () => {
-  currentPage.value =1
+  currentPage.value = 1
 })
 watchArray([currentPage, searchQuery, rowPerPage], async () => {
   await fetchRoles()
@@ -39,21 +39,18 @@ watchArray([currentPage, searchQuery, rowPerPage], async () => {
 
 // 👉 Computing pagination data
 const paginationData = computed(() => {
-  
   const firstIndex = roles.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
   const lastIndex = roles.value.length + ((currentPage.value - 1) * totalPage.value)
 
   return `Mostrando ${firstIndex} a ${lastIndex} de ${totalData.value} registros`
 })
- 
 
-const changeScreen = async (screen: string, menuId: number|null = null) => {
+const changeScreen = async (screen: string, menuId: number | null = null) => {
   storeRole.clearFormulario()
-  storeRole.typeAction = screen  
-  if(menuId)
+  storeRole.typeAction = screen
+  if (menuId)
     storeRole.fetchInfoRole(menuId)
 }
-
 
 const deleteData = async (id: number) => {
   Swal.fire({
@@ -99,13 +96,13 @@ const deleteData = async (id: number) => {
           placeholder="Buscar"
           density="compact"
         />
-      </div> 
-        <VBtn
-          color="primary"
-          @click="changeScreen('form')"
-        >
-          Agregar
-        </VBtn> 
+      </div>
+      <VBtn
+        color="primary"
+        @click="changeScreen('form')"
+      >
+        Agregar
+      </VBtn>
     </div>
   </VContainer>
 
@@ -130,13 +127,13 @@ const deleteData = async (id: number) => {
     </thead>
     <tbody>
       <tr v-show="loading">
-          <td colspan="4" >
-            <PreloadInterno /> 
-          </td>
-        </tr>
+        <td colspan="4">
+          <PreloadInterno />
+        </td>
+      </tr>
       <tr
-      v-show="!loading"
-        v-for="(item,index) in roles"
+        v-for="(item, index) in roles"
+        v-show="!loading"
         :key="index"
         style="height: 3.75rem;"
       >
@@ -154,7 +151,7 @@ const deleteData = async (id: number) => {
           <span>
             {{ item.company_name }}
           </span>
-        </td> 
+        </td>
 
         <td
           class="text-center"

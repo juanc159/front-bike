@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { useLayouts } from '@layouts'
 import { HorizontalNavLink, HorizontalNavPopper } from '@layouts/components'
 import { config } from '@layouts/config'

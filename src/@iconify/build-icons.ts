@@ -10,8 +10,8 @@
  * This example uses Iconify Tools to import and clean up icons.
  * For Iconify Tools documentation visit https://docs.iconify.design/tools/tools2/
  */
-import { promises as fs } from 'fs'
-import { dirname, join } from 'path'
+import { promises as fs } from 'node:fs'
+import { dirname, join } from 'node:path'
 
 // Installation: npm install --save-dev @iconify/tools @iconify/utils @iconify/json @iconify/iconify
 import {
@@ -188,6 +188,14 @@ const target = join(__dirname, 'icons-bundle.js');
 
       // Remove metadata and add to bundle
       removeMetaData(content)
+
+      for (const key in content) {
+        if (key === 'prefix' && content.prefix === 'tabler') {
+          for (const k in content.icons)
+            content.icons[k].body = content.icons[k].body.replace(/stroke-width="2"/g, 'stroke-width="1.5"')
+        }
+      }
+
       minifyIconSet(content)
       bundle += `addCollection(${JSON.stringify(content)});\n`
       console.log(`Bundled icons from ${filename}`)
@@ -231,7 +239,7 @@ const target = join(__dirname, 'icons-bundle.js');
             await parseColors(svg, {
               defaultColor: 'currentColor',
               callback: (attr, colorStr, color) => {
-                return !color || isEmptyColor(color)
+                return (!color || isEmptyColor(color))
                   ? colorStr
                   : 'currentColor'
               },

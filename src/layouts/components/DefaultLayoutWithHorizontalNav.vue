@@ -14,9 +14,7 @@ const { appRouteTransition } = useThemeConfig()
 </script>
 
 <template>
-  <HorizontalNavLayout
-    :nav-items="navItems"
-  >
+  <HorizontalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
     <template #navbar>
       <RouterLink

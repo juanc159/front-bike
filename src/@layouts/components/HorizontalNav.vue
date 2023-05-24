@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { HorizontalNavGroup, HorizontalNavLink } from '@layouts/components'
 import type { HorizontalNavItems, NavGroup, NavLink } from '@layouts/types'
 

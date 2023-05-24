@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { computePosition, flip, shift } from '@floating-ui/dom'
 import { useLayouts } from '@layouts/composable/useLayouts'
 import { config } from '@layouts/config'
@@ -28,7 +28,7 @@ const popperContentStyles = ref({
 
 const updatePopper = async () => {
   const { x, y } = await computePosition(refPopperContainer.value, refPopper.value, {
-    placement: props.popperInlineEnd ? (props.isRtl ? 'left-start' : 'right-start') : (props.isRtl ? 'bottom-end' : 'bottom-start'),
+    placement: props.popperInlineEnd ? (props.isRtl ? 'left-start' : 'right-start') : 'bottom-start',
     middleware: [
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       flip({ boundary: document.querySelector('body')! }),

@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 import { injectionKeyIsVerticalNavHovered, useLayouts } from '@layouts'
 import { TransitionExpand, VerticalNavLink } from '@layouts/components'
 import { config } from '@layouts/config'
@@ -122,7 +122,7 @@ watch(isGroupOpen, (val: boolean) => {
 */
 watch(openGroups, val => {
   // Prevent closing recently opened inactive group.
-  const lastOpenedGroup = val[val.length - 1]
+  const lastOpenedGroup = val.at(-1)
   if (lastOpenedGroup === props.item.title)
     return
 

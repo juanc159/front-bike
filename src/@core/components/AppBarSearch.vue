@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { VList, VListItem, VListSubheader } from 'vuetify/components'
+import { VList, VListItem, VListSubheader } from 'vuetify/components/VList'
 
 interface Emit {
   (e: 'update:isDialogVisible', value: boolean): void
   (e: 'update:searchQuery', value: string): void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (e: 'itemSelected', value: any): void
 }
 
@@ -22,6 +23,7 @@ interface Suggestions {
 interface Props {
   isDialogVisible: boolean
   searchQuery: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   searchResults: any[]
   suggestions?: Suggestions[]
   noDataSuggestion?: Suggestion[]
@@ -31,7 +33,13 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 
 // 👉 Hotkey
-const { ctrl_k, meta_k } = useMagicKeys()
+const { ctrl_k, meta_k } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.ctrlKey && e.key === 'k' && e.type === 'keydown')
+      e.preventDefault()
+  },
+})
 
 const refSearchList = ref<VList>()
 const searchQuery = ref(structuredClone(toRaw(props.searchQuery)))
@@ -118,15 +126,15 @@ const resolveCategories = (val: string) => {
     >
       <VCardText
         class="pt-1"
-        style="max-height: 65px;"
+        style="min-block-size: 65px;"
       >
         <!-- 👉 Search Input -->
         <VTextField
           ref="refSearchInput"
           v-model="searchQuery"
           autofocus
-          variant="plain"
           density="comfortable"
+          variant="plain"
           class="app-bar-autocomplete-box"
           @keyup.esc="clearSearchAndCloseDialog"
           @keydown="getFocusOnSearchList"
@@ -134,42 +142,32 @@ const resolveCategories = (val: string) => {
         >
           <!-- 👉 Prepend Inner -->
           <template #prepend-inner>
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              size="x-small"
-              class="text-high-emphasis ms-n1"
-            >
+            <div class="d-flex align-center text-high-emphasis me-1">
               <VIcon
                 size="22"
                 icon="tabler-search"
+                class="mt-1"
+                style="opacity: 1;"
               />
-            </VBtn>
+            </div>
           </template>
 
           <!-- 👉 Append Inner -->
           <template #append-inner>
             <div class="d-flex align-center">
               <div
-                class="text-base text-disabled cursor-pointer me-2"
+                class="text-base text-disabled cursor-pointer me-1"
                 @click="clearSearchAndCloseDialog"
               >
                 [esc]
               </div>
 
-              <VBtn
-                icon
-                variant="text"
-                color="default"
-                size="x-small"
+              <IconBtn
+                size="small"
                 @click="clearSearchAndCloseDialog"
               >
-                <VIcon
-                  size="22"
-                  icon="tabler-x"
-                />
-              </VBtn>
+                <VIcon icon="tabler-x" />
+              </IconBtn>
             </div>
           </template>
         </VTextField>
@@ -294,9 +292,10 @@ const resolveCategories = (val: string) => {
                   size="75"
                   icon="tabler-file-x"
                 />
-                <h6 class="text-h6 my-3">
-                  No Result For "{{ searchQuery }}"
-                </h6>
+                <div class="d-flex align-center flex-wrap justify-center gap-2 text-h6 my-3">
+                  <span>No Result For </span>
+                  <span>"{{ searchQuery }}"</span>
+                </div>
                 <div
                   v-if="props.noDataSuggestion"
                   class="mt-8"
@@ -337,11 +336,24 @@ const resolveCategories = (val: string) => {
 .app-bar-autocomplete-box {
   .v-field__input {
     padding-block-end: 0.425rem;
-    padding-block-start: 0.9375rem;
+    padding-block-start: 1.16rem;
+  }
+
+  .v-field__append-inner,
+  .v-field__prepend-inner {
+    padding-block-start: 0.95rem;
+  }
+
+  .v-field__field input {
+    text-align: start !important;
   }
 }
 
 .app-bar-search-dialog {
+  .v-overlay__scrim {
+    backdrop-filter: blur(4px);
+  }
+
   .v-list-item-title {
     font-size: 0.875rem !important;
   }

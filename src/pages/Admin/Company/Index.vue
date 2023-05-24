@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import TableList from '@/pages/Admin/Company/Components/TableList.vue';
 import Form from '@/pages/Admin/Company/Components/Form.vue';
-import { AuthenticationStore } from '@/stores/Authentication';
+import TableList from '@/pages/Admin/Company/Components/TableList.vue';
 import { useCrudCompanyStore } from '@/stores/Admin/useCrudCompanyStore';
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 
-const storeCrudCompany = useCrudCompanyStore();
-const auth = AuthenticationStore();
-const { typeAction } = storeToRefs(storeCrudCompany);
+const storeCrudCompany = useCrudCompanyStore()
+const auth = useAuthenticationStore()
+const { typeAction } = storeToRefs(storeCrudCompany)
 
 onUnmounted(() => {
-  storeCrudCompany.$reset();
+  storeCrudCompany.$reset()
 })
 </script>
 
 <template>
-    <div>
-      <VRow>
-        <VCol cols="12">
-          <VCard
-            v-if="typeAction === 'list'"
-            title="Listado Compañía"
-          >
+  <div>
+    <VRow>
+      <VCol cols="12">
+        <VCard
+          v-if="typeAction === 'list'"
+          title="Listado Compañía"
+        >
           <VCardText>
-              <TableList/>
+            <TableList />
           </VCardText>
-          </VCard>
-          <VCard
-            v-if="typeAction === 'form'"
-            title="Formulario Compañía"
-          >
-            <VCardText>
-                <Form/>
-            </VCardText>
-            <VCardText />
-          </VCard>
-        </VCol>
-      </VRow>
-    </div>
-  </template>
+        </VCard>
+        <VCard
+          v-if="typeAction === 'form'"
+          title="Formulario Compañía"
+        >
+          <VCardText>
+            <Form />
+          </VCardText>
+          <VCardText />
+        </VCard>
+      </VCol>
+    </VRow>
+  </div>
+</template>
 
 <route lang="yaml">
 meta:

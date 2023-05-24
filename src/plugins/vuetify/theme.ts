@@ -1,13 +1,16 @@
 import type { VuetifyOptions } from 'vuetify'
+import { resolveVuetifyTheme } from '@core/utils/vuetify'
 import { themeConfig } from '@themeConfig'
 
+export const staticPrimaryColor = '#7367F0'
+
 const theme: VuetifyOptions['theme'] = {
-  defaultTheme: localStorage.getItem(`${themeConfig.app.title}-theme`) || themeConfig.app.theme.value,
+  defaultTheme: resolveVuetifyTheme(),
   themes: {
     light: {
       dark: false,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || '#7367F0',
+        'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || staticPrimaryColor,
         'on-primary': '#fff',
         'secondary': '#A8AAAE',
         'on-secondary': '#fff',
@@ -19,8 +22,8 @@ const theme: VuetifyOptions['theme'] = {
         'on-warning': '#fff',
         'error': '#EA5455',
         'background': '#F8F7FA',
-        'on-background': '#33303C',
-        'on-surface': '#33303C',
+        'on-background': '#2F2B3D',
+        'on-surface': '#2F2B3D',
         'grey-50': '#FAFAFA',
         'grey-100': '#F5F5F5',
         'grey-200': '#EEEEEE',
@@ -32,22 +35,39 @@ const theme: VuetifyOptions['theme'] = {
         'grey-800': '#424242',
         'grey-900': '#212121',
         'perfect-scrollbar-thumb': '#DBDADE',
+        'skin-bordered-background': '#fff',
+        'skin-bordered-surface': '#fff',
       },
 
       variables: {
-        'border-color': '#4B465C',
+        'code-color': '#d400ff',
+        'overlay-scrim-background': '#4C4E64',
+        'tooltip-background': '#4A5072',
+        'overlay-scrim-opacity': 0.5,
+        'hover-opacity': 0.04,
+        'focus-opacity': 0.12,
+        'selected-opacity': 0.06,
+        'activated-opacity': 0.16,
+        'pressed-opacity': 0.14,
+        'dragged-opacity': 0.1,
+        'disabled-opacity': 0.42,
+        'border-color': '#2F2B3D',
+        'border-opacity': 0.16,
+        'high-emphasis-opacity': 0.78,
         'medium-emphasis-opacity': 0.68,
+        'switch-opacity': 0.2,
+        'switch-disabled-track-opacity': 0.3,
+        'switch-disabled-thumb-opacity': 0.4,
+        'switch-checked-disabled-opacity': 0.3,
 
         // Shadows
-        'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.03)',
-        'shadow-key-penumbra-opacity': 'rgba(var(--v-theme-on-surface), 0.02)',
-        'shadow-key-ambient-opacity': 'rgba(var(--v-theme-on-surface), 0.01)',
+        'shadow-key-umbra-color': '#2F2B3D',
       },
     },
     dark: {
       dark: true,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-darkThemePrimaryColor`) || '#7367F0',
+        'primary': localStorage.getItem(`${themeConfig.app.title}-darkThemePrimaryColor`) || staticPrimaryColor,
         'on-primary': '#fff',
         'secondary': '#A8AAAE',
         'on-secondary': '#fff',
@@ -59,9 +79,9 @@ const theme: VuetifyOptions['theme'] = {
         'on-warning': '#fff',
         'error': '#EA5455',
         'background': '#25293C',
-        'on-background': '#E4E6F4',
+        'on-background': '#D0D4F1',
         'surface': '#2F3349',
-        'on-surface': '#E4E6F4',
+        'on-surface': '#D0D4F1',
         'grey-50': '#26293A',
         'grey-100': '#2F3349',
         'grey-200': '#26293A',
@@ -73,15 +93,32 @@ const theme: VuetifyOptions['theme'] = {
         'grey-800': '#CFD3EC',
         'grey-900': '#E7E9F6',
         'perfect-scrollbar-thumb': '#4A5072',
+        'skin-bordered-background': '#2f3349',
+        'skin-bordered-surface': '#2f3349',
       },
       variables: {
-        'border-color': '#CFD3EC',
+        'code-color': '#d400ff',
+        'overlay-scrim-background': '#101121',
+        'tooltip-background': '#5E6692',
+        'overlay-scrim-opacity': 0.6,
+        'hover-opacity': 0.04,
+        'focus-opacity': 0.12,
+        'selected-opacity': 0.06,
+        'activated-opacity': 0.16,
+        'pressed-opacity': 0.14,
+        'dragged-opacity': 0.1,
+        'disabled-opacity': 0.42,
+        'border-color': '#D0D4F1',
+        'border-opacity': 0.16,
+        'high-emphasis-opacity': 0.78,
         'medium-emphasis-opacity': 0.68,
+        'switch-opacity': 0.4,
+        'switch-disabled-track-opacity': 0.4,
+        'switch-disabled-thumb-opacity': 0.8,
+        'switch-checked-disabled-opacity': 0.3,
 
         // Shadows
-        'shadow-key-umbra-opacity': 'rgba(12, 16, 27, 0.15)',
-        'shadow-key-penumbra-opacity': 'rgba(12, 16, 27, 0.01)',
-        'shadow-key-ambient-opacity': 'rgba(12, 16, 27, 0.08)',
+        'shadow-key-umbra-color': '#0F1422',
       },
     },
   },

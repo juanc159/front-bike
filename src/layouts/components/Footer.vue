@@ -25,11 +25,11 @@
         target="noopener noreferrer"
       >License</a>
       <a
-        href="https://pixinvent.com/"
+        href="https://1.envato.market/pixinvent_portfolio"
         target="noopener noreferrer"
       >More Themes</a>
       <a
-        href="https://pixinvent.com/demo/vuexy-vuejs-admin-dashboard-template/documentation/"
+        href="https://demos.pixinvent.com/vuexy-vuejs-admin-template/documentation/"
         target="noopener noreferrer"
       >Documentation</a>
     </span>

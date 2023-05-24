@@ -1,32 +1,22 @@
 <script lang="ts" setup type="module">
 import Swal from 'sweetalert2';
-import  VDataTable  from 'vuetify/labs/VDataTable'
 
-import { useCrudUserStore } from '@/stores/Admin/useCrudUserStore';
-import { AuthenticationStore } from '@/stores/Authentication';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
+import { useCrudUserStore } from '@/stores/Admin/useCrudUserStore';
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 
-const authentication = AuthenticationStore();
+const authentication = useAuthenticationStore()
 const storeUser = useCrudUserStore()
 const showSearchData = ref<boolean>(true)
 
-// users data paginate 
+// users data paginate
 const { users, totalPage, lastPage, currentPage, totalData, arrayRoles, loading } = storeToRefs(storeUser)
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 const searchCriteria = ref<object>({})
 
+ 
 
-// headers
-const headers = [
-  { title: 'Nombre usuario', key: 'name' },
-  { title: 'Número de identificación', key: 'identification' },
-  { title: 'Teléfono', key: 'phone' },
-  { title: 'Correo', key: 'buyer.email' },
-  { title: 'Rol', key: 'role', sortable: false },
-  { title: 'Estado', key: 'state', sortable: false },
-  { title: 'Acciones', key: 'delete' },
-]
 const fetchUser = async () => {
   await storeUser.fetchAll({
     company_id: authentication.company.id,
@@ -39,7 +29,6 @@ const fetchUser = async () => {
     identification: searchCriteria.value.identification,
   })
 }
-
 
 onMounted(async () => {
   await fetchUser()
@@ -60,6 +49,7 @@ watchArray([currentPage, searchQuery, rowPerPage], async () => {
 const paginationData = computed(() => {
   const firstIndex = users.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
   const lastIndex = users.value.length + ((currentPage.value - 1) * totalPage.value)
+
   return `Mostrando ${firstIndex} a ${lastIndex} de ${totalData.value} registros`
 })
 
@@ -70,15 +60,15 @@ const changeScreen = async (screen: string, userId: number | null = null) => {
     storeUser.fetchInfoUser(userId)
 }
 
-//Accion cambio de estado
+// Accion cambio de estado
 const changeState = async (object: object, state: number) => {
-  storeUser.changeState(object, state);
+  storeUser.changeState(object, state)
 }
 
-//LIMPIA VAMPOS A BUSCAR
+// LIMPIA VAMPOS A BUSCAR
 const clearSearchCriteria = () => {
-  searchCriteria.value = {};
-  fetchUser();
+  searchCriteria.value = {}
+  fetchUser()
 }
 
 const deleteData = async (id: number) => {
@@ -101,7 +91,6 @@ const deleteData = async (id: number) => {
 
 <template>
   <div>
-
     <VCard title="Listado Usuario">
       <VCardText>
         <!-- INICIO CARD BUSQUEDA -->
@@ -109,51 +98,100 @@ const deleteData = async (id: number) => {
           <VCol cols="12">
             <VCard>
               <VCardActions>
-                <VBtn color="orange-lighten-2" variant="text" @click="showSearchData = !showSearchData"> Criterios de
-                  búsqueda </VBtn>
-                <VSpacer></VSpacer>
-                <VBtn :icon="showSearchData ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                  @click="showSearchData = !showSearchData"></VBtn>
+                <VBtn
+                  color="orange-lighten-2"
+                  variant="text"
+                  @click="showSearchData = !showSearchData"
+                >
+                  Criterios de
+                  búsqueda
+                </VBtn>
+                <VSpacer />
+                <VBtn
+                  :icon="showSearchData ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  @click="showSearchData = !showSearchData"
+                />
               </VCardActions>
               <VExpandTransition>
                 <div v-show="showSearchData">
-                  <VDivider></VDivider>
+                  <VDivider />
                   <VCardText>
                     <VRow>
                       <VCol cols="6">
                         <div>
-                          <VSelect :items="arrayRoles" item-title="name" v-model="searchCriteria.role_id" item-value="id"
-                            label="Tipo de usuario"></VSelect>
+                          <VSelect
+                            v-model="searchCriteria.role_id"
+                            :items="arrayRoles"
+                            item-title="name"
+                            item-value="id"
+                            label="Tipo de usuario"
+                          />
                         </div>
 
                         <div class="mt-4">
                           <VRow>
-                            <VCol cols="12" sm="2" md="2">
+                            <VCol
+                              cols="12"
+                              sm="2"
+                              md="2"
+                            >
                               <span>Estado</span>
                             </VCol>
-                            <VCol cols="12" sm="4" md="4">
-                              <VCheckbox label="Activo" :value="1" v-model="searchCriteria.state"></VCheckbox>
+                            <VCol
+                              cols="12"
+                              sm="4"
+                              md="4"
+                            >
+                              <VCheckbox
+                                v-model="searchCriteria.state"
+                                label="Activo"
+                                :value="1"
+                              />
                             </VCol>
-                            <VCol cols="12" sm="4" md="4">
-                              <VCheckbox :value="0" v-model="searchCriteria.state" label="Inactivo"></VCheckbox>
+                            <VCol
+                              cols="12"
+                              sm="4"
+                              md="4"
+                            >
+                              <VCheckbox
+                                v-model="searchCriteria.state"
+                                :value="0"
+                                label="Inactivo"
+                              />
                             </VCol>
                           </VRow>
-
                         </div>
                       </VCol>
                       <VCol cols="6">
                         <div>
-                          <VTextField label="Usuario" v-model="searchCriteria.name" />
+                          <VTextField
+                            v-model="searchCriteria.name"
+                            label="Usuario"
+                          />
                         </div>
                         <div class="mt-4">
-                          <VTextField label="Número de identificación" v-model="searchCriteria.identification" />
+                          <VTextField
+                            v-model="searchCriteria.identification"
+                            label="Número de identificación"
+                          />
                         </div>
                       </VCol>
                     </VRow>
                     <VRow>
                       <VCol cols="12 d-flex justify-content-center">
-                        <VBtn color="primary" class="mr-2" @click="fetchUser">Buscar</VBtn>
-                        <VBtn color="primary" @click="clearSearchCriteria">Limpiar Filtros</VBtn>
+                        <VBtn
+                          color="primary"
+                          class="mr-2"
+                          @click="fetchUser"
+                        >
+                          Buscar
+                        </VBtn>
+                        <VBtn
+                          color="primary"
+                          @click="clearSearchCriteria"
+                        >
+                          Limpiar Filtros
+                        </VBtn>
                       </VCol>
                     </VRow>
                   </VCardText>
@@ -162,127 +200,180 @@ const deleteData = async (id: number) => {
             </VCard>
           </VCol>
         </VRow>
-        <!-- FIN CARD BUSQUEDA-->
+        <!-- FIN CARD BUSQUEDA -->
+        <VContainer
+          fluid
+          class="d-flex flex-wrap py-4 gap-4"
+        >
+          <div
+            class="me-3"
+            style="width: 80px;"
+          >
+            <VSelect
+              v-model="rowPerPage"
+              density="compact"
+              variant="outlined"
+              :items="[10, 20, 30, 50]"
+            />
+          </div>
+    
+          <VSpacer />
+    
+          <div class="app-user-search-filter d-flex  align-center flex-wrap gap-4">
+            <div style="width: 10rem;">
+              <VTextField
+                v-model="searchQuery"
+                placeholder="Buscar"
+                density="compact"
+              />
+            </div>
+            <VBtn
+              color="primary"
+              @click="changeScreen('form')"
+            >
+              Agregar
+            </VBtn>
+          </div>
+        </VContainer>
+    
+        <VDivider />
+    
+        <VTable class="text-no-wrap">
+          <thead>
+            <tr>
+              <th scope="col">
+                Nombre usuario
+              </th>
+              <th scope="col">
+                Número de identificación
+              </th>
+              <th scope="col">
+                Teléfono
+              </th>
+              <th scope="col">
+                Correo
+              </th>
+              <th scope="col">
+                Rol
+              </th>
+              <th scope="col">
+                Acciones
+              </th>
+              <th scope="col">
+                Estado
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-show="loading">
+              <td colspan="6">
+                <PreloadInterno />
+              </td>
+            </tr>
+            <tr
+              v-for="(item, index) in users"
+              v-show="!loading"
+              :key="index"
+              style="height: 3.75rem;"
+            >
+              <td>
+                <span>
+                  {{ item.name }}
+                </span>
+              </td>
+              <td>
+                <span>
+                  {{ item.identification }}
+                </span>
+              </td>
+              <td>
+                <span>
+                  {{ item.phone }}
+                </span>
+              </td>
+              <td>
+                <span>
+                  {{ item.email }}
+                </span>
+              </td>
+              <td>
+                <span>{{ item.role }}</span>
+              </td>
+              <td>
+                <VSwitch
+                  v-model="item.state"
+                  color="success"
+                  inset
+                  :value="item.state"
+                  :true-value="1"
+                  :false-value="0"
+                  hide-details
+                  @click="changeState(item, item.state)"
+                />
+              </td>
+              <td
+                class="text-center"
+                style="width: 5rem;"
+              >
+                <VBtn
+                  size="x-small"
+                  color="error"
+                  variant="text"
+                  @click="deleteData(item.id)"
+                >
+                  <VIcon
+                    size="22"
+                    icon="tabler-trash"
+                  />
+                </VBtn>
+    
+                <VBtn
+                  icon
+                  size="x-small"
+                  color="default"
+                  variant="text"
+                  @click="changeScreen('form', item.id)"
+                >
+                  <VIcon
+                    size="22"
+                    icon="tabler-edit"
+                  />
+                </VBtn>
+              </td>
+            </tr>
+          </tbody>
+    
+          <tfoot v-show="!users.length">
+            <tr>
+              <td
+                colspan="7"
+                class="text-center"
+              >
+                No se encuentran resultados
+              </td>
+            </tr>
+          </tfoot>
+        </VTable>
+    
+        <VDivider />
+    
+        <VContainer
+          fluid
+          class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5"
+        >
+          <span class="text-sm text-disabled">
+            {{ paginationData }}
+          </span>
+    
+          <VPagination
+            v-model="currentPage"
+            size="small"
+            :total-visible="5"
+            :length="lastPage"
+          />
+        </VContainer>
       </VCardText>
     </VCard>
-
-    <VDataTable
-      :headers="headers"
-      :items="[]"
-      :items-per-page="5"
-      class="text-no-wrap"
-    >
-  </VDataTable>
-
-
-    <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
-      <div class="me-3" style="width: 80px;">
-        <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
-      </div>
-
-      <VSpacer />
-
-      <div class="app-user-search-filter d-flex  align-center flex-wrap gap-4">
-        <div style="width: 10rem;">
-          <VTextField v-model="searchQuery" placeholder="Buscar" density="compact" />
-        </div>
-        <VBtn color="primary" @click="changeScreen('form')">
-          Agregar
-        </VBtn>
-      </div>
-    </VContainer>
-
-    <VDivider />
-
-    <VTable class="text-no-wrap">
-      <thead>
-        <tr>
-          <th scope="col">
-            Nombre usuario
-          </th>
-          <th scope="col">
-            Número de identificación
-          </th>
-          <th scope="col">
-            Teléfono
-          </th>
-          <th scope="col">
-            Correo
-          </th>
-          <th scope="col">
-            Rol
-          </th>
-          <th scope="col">
-            Acciones
-          </th>
-          <th scope="col">
-            Estado
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-show="loading">
-          <td colspan="6">
-            <PreloadInterno />
-          </td>
-        </tr>
-        <tr v-show="!loading" v-for="(item, index) in users" :key="index" style="height: 3.75rem;">
-          <td>
-            <span>
-              {{ item.name }}
-            </span>
-          </td>
-          <td>
-            <span>
-              {{ item.identification }}
-            </span>
-          </td>
-          <td>
-            <span>
-              {{ item.phone }}
-            </span>
-          </td>
-          <td>
-            <span>
-              {{ item.email }}
-            </span>
-          </td>
-          <td>
-            <span>{{ item.role }}</span>
-          </td>
-          <td>
-            <VSwitch v-model="item.state" color="success" inset :value="item.state" :true-value="1" :false-value="0"
-              hide-details @click="changeState(item, item.state)"></VSwitch>
-          </td>
-          <td class="text-center" style="width: 5rem;">
-            <VBtn size="x-small" color="error" variant="text" @click="deleteData(item.id)">
-              <VIcon size="22" icon="tabler-trash" />
-            </VBtn>
-
-            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
-              <VIcon size="22" icon="tabler-edit" />
-            </VBtn>
-          </td>
-        </tr>
-      </tbody>
-
-      <tfoot v-show="!users.length">
-        <tr>
-          <td colspan="7" class="text-center">
-            No se encuentran resultados
-          </td>
-        </tr>
-      </tfoot>
-    </VTable>
-
-    <VDivider />
-
-    <VContainer fluid class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5">
-      <span class="text-sm text-disabled">
-        {{ paginationData }}
-      </span>
-
-      <VPagination v-model="currentPage" size="small" :total-visible="5" :length="lastPage" />
-    </VContainer>
+ 
   </div>
 </template>

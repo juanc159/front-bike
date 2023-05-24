@@ -1,4 +1,4 @@
-<script lang="ts" setup type="module">
+<script lang="ts" setup>
 const vm = getCurrentInstance()
 
 const buyNowUrl = ref(vm?.appContext.config.globalProperties.buyNowUrl || 'https://1.envato.market/vuexy_admin')
@@ -11,6 +11,7 @@ watch(buyNowUrl, val => {
 
 <template>
   <VBtn
+    id="buy-now-btn"
     color="error"
     class="product-buy-now"
     :href="buyNowUrl"
