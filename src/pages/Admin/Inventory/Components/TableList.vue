@@ -11,8 +11,7 @@ const inventoryStore = useCrudInventoryStore()
 //  data paginate
 const { inventories, totalPage, lastPage, currentPage, totalData, loading } = storeToRefs(inventoryStore)
 const rowPerPage = ref<number>(10)
-const searchQuery = ref<string>('')
-const searchCriteria = ref<object>({})
+const searchQuery = ref<string>('') 
 
  
 
@@ -21,11 +20,7 @@ const fetchInventory = async () => {
     company_id: authentication.company.id,
     perPage: rowPerPage.value,
     page: currentPage.value,
-    searchQuery: searchQuery.value,
-    role_id: searchCriteria.value.role_id,
-    state: searchCriteria.value.state,
-    name: searchCriteria.value.name,
-    identification: searchCriteria.value.identification,
+    searchQuery: searchQuery.value
   })
 }
 

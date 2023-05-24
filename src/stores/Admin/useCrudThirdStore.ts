@@ -1,30 +1,22 @@
 import { useToast } from '@/composables/useToast'
-import type IInventoryForm from '@/interfaces/Admin/Inventory/IInventoryForm'
-import type IInventoryList from '@/interfaces/Admin/Inventory/IInventoryList'
+import type IThirdForm from '@/interfaces/Admin/Third/IThirdForm'
+import type IThirdList from '@/interfaces/Admin/Third/IThirdList'
 import axiosIns from '@/plugins/axios'
 import { usePreloadStore } from '@/stores/usePreloadStore'
 import { defineStore } from 'pinia'
 
-
 const toast = useToast()
 
-export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
+export const useCrudThirdStore = defineStore('useCrudThirdStore', {
   state: () => ({
     loading: true as boolean,
     formulario: {
       id: null,
-      item: null,
-      reference: null,
-      brand: null,
-      model: null,
-      color: null,
-      plate: null,
-      registrationSite: null,
-      value: null
-    } as IInventoryForm,
+      name: null,
+    } as IThirdForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
-    inventories: [] as Array<IInventoryList>,
+    thirds: [] as Array<IThirdList>,
     totalData: 0 as number,
     totalPage: 0 as number,
     currentPage: 1 as number,
@@ -34,26 +26,19 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
   },
   actions: {
     clearFormulario() {
-      this.formulario = <IInventoryForm>{
+      this.formulario = <IThirdForm>{
         id: null,
-        item: null,
-        reference: null,
-        brand: null,
-        model: null,
-        color: null,
-        plate: null,
-        registrationSite: null,
-        value: null
+        name: null
       }
     },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
       await axiosIns.post(
-        '/inventory-list',
+        '/third-list',
         params,
       ).then(result => {
         this.loading = false
-        this.inventories = result.data.inventories
+        this.thirds = result.data.thirds
         this.totalData = result.data.totalData
         this.totalPage = result.data.totalPage
         this.currentPage = result.data.currentPage
@@ -69,7 +54,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       preload.isLoading = true
 
       const response = await axiosIns.post(
-        '/inventory-create',
+        '/third-create',
         this.formulario,
       ).then(result => {
         preload.isLoading = false
@@ -106,7 +91,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
 
       preload.isLoading = true
       await axiosIns.delete(
-        `/inventory-delete/${id}`,
+        `/third-delete/${id}`,
       ).then(result => {
         preload.isLoading = false
         toast.toast('Éxito', result.data.message, 'success')
@@ -120,7 +105,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       const preload = usePreloadStore()
       preload.isLoading = true
       await axiosIns.get(
-        `/inventory-info/${id}`,
+        `/third-info/${id}`,
       ).then(async result => {
         console.log('RESULT', result)
         preload.isLoading = false

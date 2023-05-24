@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import Form from '@/pages/Admin/Inventory/Components/Form.vue';
-import TableList from '@/pages/Admin/Inventory/Components/TableList.vue';
-import { useCrudInventoryStore } from '@/stores/Admin/useCrudInventoryStore';
+import Form from '@/pages/Admin/Third/Components/Form.vue';
+import TableList from '@/pages/Admin/Third/Components/TableList.vue';
+import { useCrudThirdStore } from '@/stores/Admin/useCrudThirdStore';
 import { useRoute } from 'vue-router';
 
-const inventoryStore = useCrudInventoryStore()
+const thirdStore = useCrudThirdStore()
 
-const { typeAction } = storeToRefs(inventoryStore)
+const { typeAction } = storeToRefs(thirdStore)
 const route = useRoute()
 console.log("route", route);
 
 onUnmounted(() => {
-  inventoryStore.$reset();
+  thirdStore.$reset();
 })
 </script>
 
@@ -21,7 +21,7 @@ onUnmounted(() => {
       <VCol cols="12">
         <VCard v-show="typeAction !== 'form'" title="Listado Inventario">
           <VCardText>
-            <TableList :key="inventoryStore.keyList" />
+            <TableList :key="thirdStore.keyList" />
           </VCardText>
         </VCard>
         <VCard v-show="typeAction === 'form'" title="Formulario Inventario">
@@ -40,7 +40,8 @@ onUnmounted(() => {
     subject: Auth
     redirectIfLoggedIn: true
     requiresAuth: true
-    requiredPermission: admin.inventory.index
+    requiredPermission: admin.third.index
   </route>
+  
 
 
