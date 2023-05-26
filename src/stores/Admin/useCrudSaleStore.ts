@@ -1,59 +1,61 @@
 import { useToast } from '@/composables/useToast'
-import type IInventoryForm from '@/interfaces/Admin/Inventory/IInventoryForm'
-import type IInventoryList from '@/interfaces/Admin/Inventory/IInventoryList'
+import type ISaleForm from '@/interfaces/Admin/Sale/ISaleForm'
+import type ISaleList from '@/interfaces/Admin/Sale/ISaleList'
 import axiosIns from '@/plugins/axios'
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore'
 import { usePreloadStore } from '@/stores/usePreloadStore'
 import { defineStore } from 'pinia'
 
-
 const toast = useToast()
+const authenticationStore = useAuthenticationStore()
 
-export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
+export const useCrudSaleStore = defineStore('useCrudSaleStore', {
+  //son las variables
   state: () => ({
+    pathExcel: null as null | string,
     loading: true as boolean,
     formulario: {
       id: null,
-      reference: null,
-      brand: null,
-      model: null,
-      color: null,
-      plate: null,
-      registrationSite: null,
-      value: null,
-      vehicleType: null,
-    } as IInventoryForm,
+      inventory_id: null,
+      description: null,
+      thirds: [],
+      total: 0,
+      utilities: 0,
+    } as ISaleForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
-    inventories: [] as Array<IInventoryList>,
+    sales: [] as Array<ISaleList>,
+    inventories: [] as Array<object>,
+    thirds: [] as Array<object>,
     totalData: 0 as number,
     totalPage: 0 as number,
     currentPage: 1 as number,
     lastPage: 0 as number,
   }),
+  //getter son las variables computadas
   getters: {
   },
+
+  //son los metodos o funciones
   actions: {
     clearFormulario() {
-      this.formulario = <IInventoryForm>{
+      this.formulario = <ISaleForm>{
         id: null,
-        reference: null,
-        brand: null,
-        model: null,
-        color: null,
-        plate: null,
-        registrationSite: null,
-        value: null,
-        vehicleType: null,
+        inventory_id: null,
+        description: null,
+        thirds: [],
+        total: 0,
+        utilities: 0
       }
     },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
       await axiosIns.post(
-        '/inventory-list',
+        '/sale-list',
         params,
       ).then(result => {
         this.loading = false
-        this.inventories = result.data.inventories
+        this.sales = result.data.sales
         this.totalData = result.data.totalData
         this.totalPage = result.data.totalPage
         this.currentPage = result.data.currentPage
@@ -68,8 +70,9 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       const preload = usePreloadStore()
       preload.isLoading = true
 
+
       const response = await axiosIns.post(
-        '/inventory-create',
+        '/sale-create',
         this.formulario,
       ).then(result => {
         preload.isLoading = false
@@ -106,7 +109,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
 
       preload.isLoading = true
       await axiosIns.delete(
-        `/inventory-delete/${id}`,
+        `/sale-delete/${id}`,
       ).then(result => {
         preload.isLoading = false
         toast.toast('Éxito', result.data.message, 'success')
@@ -120,15 +123,47 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       const preload = usePreloadStore()
       preload.isLoading = true
       await axiosIns.get(
-        `/inventory-info/${id}`,
+        `/sale-info/${id}`,
       ).then(async result => {
-        console.log('RESULT', result)
         preload.isLoading = false
         this.formulario = await result.data.data
+
       }).catch(async error => {
         preload.isLoading = false
         console.log(await error)
       })
+    },
+    async fetchDataForm(): Promise<void> {
+      const preload = usePreloadStore()
+      const form: object = { company_id: authenticationStore.company.id }
+      preload.isLoading = true
+      await axiosIns.post(
+        `/sale-dataForm`, form
+      ).then(async result => {
+        preload.isLoading = false
+        this.inventories = await result.data.inventories
+        this.thirds = await result.data.thirds
+      }).catch(async error => {
+        preload.isLoading = false
+        console.log(await error)
+      })
+    },
+    //excel TABLA
+    async excel(params: object): Promise<void> {
+      const preload = usePreloadStore()
+      preload.isLoading = true
+      console.log(params, "params");
+
+      await axiosIns
+        .post("/sale-excel", params)
+        .then((result) => {
+          preload.isLoading = false
+          this.pathExcel = result.data.path;
+        })
+        .catch(async (error) => {
+          preload.isLoading = false
+          console.log(await error);
+        });
     },
 
   },

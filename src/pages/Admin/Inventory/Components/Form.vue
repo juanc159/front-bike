@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useCrudInventoryStore } from '@/stores/Admin/useCrudInventoryStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
-import { requiredValidator } from '@validators';
+import { integerValidator, requiredValidator } from '@validators';
 import { VForm } from 'vuetify/components';
 
 const props = defineProps({
@@ -62,8 +62,8 @@ onMounted(async () => {
     <VForm ref="formValidation" lazy-validation>
       <VRow>
         <VCol cols="12" md="4">
-          <VTextField v-model="formulario.item" :rules="[requiredValidator]" autocomplete="off"
-            :error-messages="errors.item" label="Item" @keypress="errors.item = ''" />
+          <VSelect :items="['moto', 'carro']" v-model="formulario.vehicleType" label="Tipo de Vehículo"
+            :rules="[requiredValidator]"></VSelect>
         </VCol>
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.reference" :rules="[requiredValidator]" autocomplete="off"
@@ -80,7 +80,6 @@ onMounted(async () => {
           <VTextField v-model="formulario.model" :rules="[requiredValidator]" :error-messages="errors.model"
             label="Modelo" @keypress="errors.model = ''" />
         </VCol>
-
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.color" maxlength="10" :rules="[requiredValidator]"
             :error-messages="errors.color" label="Color" @keypress="errors.color = '';" />
@@ -89,15 +88,13 @@ onMounted(async () => {
           <VTextField v-model="formulario.plate" maxlength="15" :rules="[requiredValidator]"
             :error-messages="errors.plate" label="Placa" @keypress="errors.plate = '';" />
         </VCol>
-      </VRow>
-      <VRow>
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.registrationSite" maxlength="15" :rules="[requiredValidator]"
             :error-messages="errors.registrationSite" label="Sitio de matricula"
             @keypress="errors.registrationSite = '';" />
         </VCol>
         <VCol cols="12" md="4">
-          <VTextField v-model="formulario.value" maxlength="15" :rules="[requiredValidator]"
+          <VTextField v-model="formulario.value" maxlength="15" :rules="[requiredValidator, integerValidator]"
             :error-messages="errors.value" label="Valor" @keypress="errors.value = '';" />
         </VCol>
       </VRow>

@@ -17,18 +17,12 @@ onUnmounted(() => {
   <div>
     <VRow>
       <VCol cols="12">
-        <VCard
-          v-if="typeAction === 'list'"
-          title="Listado Compañía"
-        >
+        <VCard v-if="typeAction === 'list'" title="Listado Compañía">
           <VCardText>
             <TableList />
           </VCardText>
         </VCard>
-        <VCard
-          v-if="typeAction === 'form'"
-          title="Formulario Compañía"
-        >
+        <VCard v-if="typeAction === 'form'" title="Formulario Compañía">
           <VCardText>
             <Form />
           </VCardText>

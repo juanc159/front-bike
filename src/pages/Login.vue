@@ -36,51 +36,25 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const isPasswordVisible = ref(false)
 
 const refVForm = ref<VForm>()
-const email = ref('admin@demo.com')
-const password = ref('admin')
 const rememberMe = ref(false)
 </script>
 
 <template>
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
-    <VCol
-      lg="8"
-      class="d-none d-lg-flex"
-    >
+  <VRow no-gutters class="auth-wrapper bg-surface">
+    <VCol lg="8" class="d-none d-lg-flex">
       <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
         <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="505"
-            :src="authThemeImg"
-            class="auth-illustration mt-16 mb-2"
-          />
+          <VImg max-width="505" :src="authThemeImg" class="auth-illustration mt-16 mb-2" />
         </div>
 
-        <VImg
-          :src="authThemeMask"
-          class="auth-footer-mask"
-        />
+        <VImg :src="authThemeMask" class="auth-footer-mask" />
       </div>
     </VCol>
 
-    <VCol
-      cols="12"
-      lg="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-    >
-      <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-4"
-      >
+    <VCol cols="12" lg="4" class="auth-card-v2 d-flex align-center justify-center">
+      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-4">
         <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
+          <VNodeRenderer :nodes="themeConfig.app.logo" class="mb-6" />
 
           <h5 class="text-h5 mb-1">
             Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
@@ -92,10 +66,7 @@ const rememberMe = ref(false)
         </VCardText>
 
         <VCardText>
-          <VAlert
-            color="primary"
-            variant="tonal"
-          >
+          <VAlert color="primary" variant="tonal">
             <p class="text-caption mb-2">
               Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
             </p>
@@ -107,72 +78,42 @@ const rememberMe = ref(false)
         </VCardText>
 
         <VCardText>
-          <VForm
-            ref="refVForm"
-            @submit="() => { }"
-          >
+          <VForm ref="refVForm" @submit="() => { }">
             <VRow>
               <!-- email -->
               <VCol cols="12">
-                <AppTextField
-                  v-model="formulario.email"
-                  label="Email"
-                  type="email"
-                  autofocus
-                />
+                <AppTextField v-model="formulario.email" label="Email" type="email" autofocus />
               </VCol>
 
               <!-- password -->
               <VCol cols="12">
-                <AppTextField
-                  v-model="formulario.password"
-                  label="Password"
+                <AppTextField v-model="formulario.password" label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                />
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible" />
 
                 <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
-                  <VCheckbox
-                    v-model="rememberMe"
-                    label="Remember me"
-                  />
-                  <a
-                    class="text-primary ms-2 mb-1"
-                    href="#"
-                  >
+                  <VCheckbox v-model="rememberMe" label="Remember me" />
+                  <a class="text-primary ms-2 mb-1" href="#">
                     Forgot Password?
                   </a>
                 </div>
 
-                <VBtn
-                  block
-                  type="button"
-                  @click="login()"
-                >
+                <VBtn block type="button" @click="login()">
                   Login
                 </VBtn>
               </VCol>
 
               <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
+              <VCol cols="12" class="text-center">
                 <span>New on our platform?</span>
 
-                <a
-                  class="text-primary ms-2"
-                  href="#"
-                >
+                <a class="text-primary ms-2" href="#">
                   Create an account
                 </a>
               </VCol>
 
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
+              <VCol cols="12" class="d-flex align-center">
                 <VDivider />
 
                 <span class="mx-4">or</span>
@@ -181,10 +122,7 @@ const rememberMe = ref(false)
               </VCol>
 
               <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
+              <VCol cols="12" class="text-center">
                 <AuthProvider />
               </VCol>
             </VRow>

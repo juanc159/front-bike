@@ -63,7 +63,7 @@ onMounted(async () => {
       <VRow>
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.name" :rules="[requiredValidator]" autocomplete="off"
-            :error-messages="errors.name" label="Nombre" @keypress="errors.item = ''" />
+            :error-messages="errors.name" label="Nombre" @keypress="errors.name = ''" />
         </VCol>
       </VRow>
       <VRow>

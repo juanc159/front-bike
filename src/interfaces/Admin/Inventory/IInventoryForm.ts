@@ -1,6 +1,5 @@
 export default interface IInventoryForm {
   id?: null | number
-  item: null | string
   reference: null | string
   brand: null | string
   model: null | string
@@ -8,4 +7,5 @@ export default interface IInventoryForm {
   plate: null | string
   registrationSite: null | string
   value: null | string
+  vehicleType: null | string
 }

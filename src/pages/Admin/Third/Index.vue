@@ -2,13 +2,10 @@
 import Form from '@/pages/Admin/Third/Components/Form.vue';
 import TableList from '@/pages/Admin/Third/Components/TableList.vue';
 import { useCrudThirdStore } from '@/stores/Admin/useCrudThirdStore';
-import { useRoute } from 'vue-router';
 
 const thirdStore = useCrudThirdStore()
 
 const { typeAction } = storeToRefs(thirdStore)
-const route = useRoute()
-console.log("route", route);
 
 onUnmounted(() => {
   thirdStore.$reset();
