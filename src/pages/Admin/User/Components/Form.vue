@@ -74,127 +74,64 @@ onMounted(async () => {
 <template>
   <div>
     <VRow>
-      <VCol
-        cols="12"
-      >
+      <VCol cols="12">
         <div class="col-md-6 d-flex justify-content-end">
-          <VBtn
-            color="secondary"
-            @click="changeScreen('back')"
-          >
+          <VBtn color="secondary" @click="changeScreen('back')">
             Atras
           </VBtn>
         </div>
       </VCol>
     </VRow>
-    <VForm
-      ref="formValidation"
-      lazy-validation
-    >
+    <VForm ref="formValidation" lazy-validation>
       <VRow>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.email"
-            :rules="[requiredValidator, emailValidator]"
-            autocomplete="off"
-            :error-messages="errors.email"
-            label="Email"
-            @keypress="errors.email = ''"
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.email" :rules="[requiredValidator, emailValidator]" autocomplete="off"
+            :error-messages="errors.email" label="Email" @keypress="errors.email = ''" />
         </VCol>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.password"
-            :rules="arrayValidation.password"
-            autocomplete="off"
-            :type="showPass ? 'text' : 'password'"
-            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-            :error-messages="errors.password"
-            label="Contraseña"
-            @click:append="showPass = !showPass"
-            @keypress="errors.password = ''"
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.password" :rules="arrayValidation.password" autocomplete="off"
+            :type="showPass ? 'text' : 'password'" :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+            :error-messages="errors.password" label="Contraseña" @click:append="showPass = !showPass"
+            @keypress="errors.password = ''" />
         </VCol>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.name"
-            :rules="[requiredValidator]"
-            :error-messages="errors.name"
-            label="Nombre"
-            @keypress="errors.name = ''"
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.name" :rules="[requiredValidator]" :error-messages="errors.name" label="Nombre"
+            @keypress="errors.name = ''" />
         </VCol>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.lastName"
-            :rules="[requiredValidator]"
-            :error-messages="errors.lastName"
-            label="Apellido"
-            @keypress="errors.lastName = ''"
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.lastName" :rules="[requiredValidator]" :error-messages="errors.lastName"
+            label="Apellido" @keypress="errors.lastName = ''" />
         </VCol>
-        <VCol cols="4">
-          <VSelect
-            v-model="formulario.role_id"
-            :rules="[requiredValidator]"
-            :items="arrayRoles"
-            item-title="name"
-            item-value="id"
-            label="Tipo de usuario"
-            :error-messages="errors.role_id"
-            @update:model-value="errors.role_id = ''"
-          />
+        <VCol cols="12" md="4">
+          <VSelect v-model="formulario.role_id" :rules="[requiredValidator]" :items="arrayRoles" item-title="name"
+            item-value="id" label="Tipo de usuario" :error-messages="errors.role_id"
+            @update:model-value="errors.role_id = ''" />
         </VCol>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.identification"
-            maxlength="10"
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.identification" maxlength="10"
             :rules="[requiredValidator, lengthMaxValidator(formulario.identification, 10)]"
-            :error-messages="errors.identification"
-            label="identificación"
-            @keypress="errors.identification = ''; soloNumeros($event)"
-          />
+            :error-messages="errors.identification" label="identificación"
+            @keypress="errors.identification = ''; soloNumeros($event)" />
         </VCol>
       </VRow>
       <VRow>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.phone"
-            maxlength="15"
-            :rules="[requiredValidator, lengthMaxValidator(formulario.phone, 15)]"
-            :error-messages="errors.phone"
-            label="Telefono"
-            @keypress="errors.phone = '';soloNumeros($event) "
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.phone" maxlength="15"
+            :rules="[requiredValidator, lengthMaxValidator(formulario.phone, 15)]" :error-messages="errors.phone"
+            label="Telefono" @keypress="errors.phone = ''; soloNumeros($event) " />
         </VCol>
-        <VCol cols="4">
-          <VFileInput
-            :key="photo.key"
-            show-size
-            counter
-            label="Photo"
-            accept="image/*"
-            @change="selectedimage($event)"
-          >
+        <VCol cols="12" md="4">
+          <VFileInput :key="photo.key" show-size counter label="Photo" accept="image/*" @change="selectedimage($event)">
             />
           </VFileInput>
         </VCol>
         <VCol cols="12">
-          <VImg
-            contain
-            :src="photo.imageUrl ?? formulario.photo"
-            alt="foto Personal"
-            :max-width="200"
-            class="mx-auto"
-          />
+          <VImg contain :src="photo.imageUrl ?? formulario.photo" alt="foto Personal" :max-width="200" class="mx-auto" />
         </VCol>
       </VRow>
       <VRow>
         <VCol cols="12 d-flex justify-content-center">
-          <VBtn
-            color="primary"
-            @click="submitForm"
-          >
+          <VBtn color="primary" @click="submitForm">
             Guardar
           </VBtn>
         </VCol>

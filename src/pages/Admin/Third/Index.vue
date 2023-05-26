@@ -16,12 +16,12 @@ onUnmounted(() => {
   <div>
     <VRow>
       <VCol cols="12">
-        <VCard v-show="typeAction !== 'form'" title="Listado Inventario">
+        <VCard v-show="typeAction !== 'form'" title="Listado Tercero">
           <VCardText>
             <TableList :key="thirdStore.keyList" />
           </VCardText>
         </VCard>
-        <VCard v-show="typeAction === 'form'" title="Formulario Inventario">
+        <VCard v-show="typeAction === 'form'" title="Formulario Tercero">
           <VCardText>
             <Form />
           </VCardText>

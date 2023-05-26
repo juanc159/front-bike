@@ -1,8 +1,8 @@
 <script lang="ts">
-import type { PropType } from 'vue'
 import { useLayouts } from '@layouts'
 import { VerticalNav } from '@layouts/components'
 import type { VerticalNavItems } from '@layouts/types'
+import type { PropType } from 'vue'
 
 export default defineComponent({
   props: {
@@ -174,7 +174,9 @@ export default defineComponent({
         .layout-navbar {
           @if variables.$layout-vertical-nav-navbar-is-contained {
             @include mixins.boxed-content;
-          } @else {
+          }
+
+          @else {
             .navbar-content-container {
               @include mixins.boxed-content;
             }

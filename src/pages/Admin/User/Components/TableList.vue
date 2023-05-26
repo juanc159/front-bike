@@ -15,7 +15,7 @@ const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 const searchCriteria = ref<object>({})
 
- 
+
 
 const fetchUser = async () => {
   await storeUser.fetchAll({
@@ -98,98 +98,54 @@ const deleteData = async (id: number) => {
           <VCol cols="12">
             <VCard>
               <VCardActions>
-                <VBtn
-                  color="orange-lighten-2"
-                  variant="text"
-                  @click="showSearchData = !showSearchData"
-                >
+                <VBtn color="orange-lighten-2" variant="text" @click="showSearchData = !showSearchData">
                   Criterios de
                   búsqueda
                 </VBtn>
                 <VSpacer />
-                <VBtn
-                  :icon="showSearchData ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                  @click="showSearchData = !showSearchData"
-                />
+                <VBtn :icon="showSearchData ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  @click="showSearchData = !showSearchData" />
               </VCardActions>
               <VExpandTransition>
                 <div v-show="showSearchData">
                   <VDivider />
                   <VCardText>
                     <VRow>
-                      <VCol cols="6">
+                      <VCol cols="12" md="6">
                         <div>
-                          <VSelect
-                            v-model="searchCriteria.role_id"
-                            :items="arrayRoles"
-                            item-title="name"
-                            item-value="id"
-                            label="Tipo de usuario"
-                          />
+                          <VSelect v-model="searchCriteria.role_id" :items="arrayRoles" item-title="name" item-value="id"
+                            label="Tipo de usuario" />
                         </div>
 
                         <div class="mt-4">
                           <VRow>
-                            <VCol
-                              cols="12"
-                              sm="2"
-                              md="2"
-                            >
+                            <VCol cols="12" sm="2" md="2">
                               <span>Estado</span>
                             </VCol>
-                            <VCol
-                              cols="12"
-                              sm="4"
-                              md="4"
-                            >
-                              <VCheckbox
-                                v-model="searchCriteria.state"
-                                label="Activo"
-                                :value="1"
-                              />
+                            <VCol cols="12" sm="4" md="4">
+                              <VCheckbox v-model="searchCriteria.state" label="Activo" :value="1" />
                             </VCol>
-                            <VCol
-                              cols="12"
-                              sm="4"
-                              md="4"
-                            >
-                              <VCheckbox
-                                v-model="searchCriteria.state"
-                                :value="0"
-                                label="Inactivo"
-                              />
+                            <VCol cols="12" sm="4" md="4">
+                              <VCheckbox v-model="searchCriteria.state" :value="0" label="Inactivo" />
                             </VCol>
                           </VRow>
                         </div>
                       </VCol>
-                      <VCol cols="6">
+                      <VCol cols="12" md="6">
                         <div>
-                          <VTextField
-                            v-model="searchCriteria.name"
-                            label="Usuario"
-                          />
+                          <VTextField v-model="searchCriteria.name" label="Usuario" />
                         </div>
                         <div class="mt-4">
-                          <VTextField
-                            v-model="searchCriteria.identification"
-                            label="Número de identificación"
-                          />
+                          <VTextField v-model="searchCriteria.identification" label="Número de identificación" />
                         </div>
                       </VCol>
                     </VRow>
                     <VRow>
                       <VCol cols="12 d-flex justify-content-center">
-                        <VBtn
-                          color="primary"
-                          class="mr-2"
-                          @click="fetchUser"
-                        >
+                        <VBtn color="primary" class="mr-2" @click="fetchUser">
                           Buscar
                         </VBtn>
-                        <VBtn
-                          color="primary"
-                          @click="clearSearchCriteria"
-                        >
+                        <VBtn color="primary" @click="clearSearchCriteria">
                           Limpiar Filtros
                         </VBtn>
                       </VCol>
@@ -201,43 +157,25 @@ const deleteData = async (id: number) => {
           </VCol>
         </VRow>
         <!-- FIN CARD BUSQUEDA -->
-        <VContainer
-          fluid
-          class="d-flex flex-wrap py-4 gap-4"
-        >
-          <div
-            class="me-3"
-            style="width: 80px;"
-          >
-            <VSelect
-              v-model="rowPerPage"
-              density="compact"
-              variant="outlined"
-              :items="[10, 20, 30, 50]"
-            />
+        <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
+          <div class="me-3" style="width: 80px;">
+            <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
           </div>
-    
+
           <VSpacer />
-    
+
           <div class="app-user-search-filter d-flex  align-center flex-wrap gap-4">
             <div style="width: 10rem;">
-              <VTextField
-                v-model="searchQuery"
-                placeholder="Buscar"
-                density="compact"
-              />
+              <VTextField v-model="searchQuery" placeholder="Buscar" density="compact" />
             </div>
-            <VBtn
-              color="primary"
-              @click="changeScreen('form')"
-            >
+            <VBtn color="primary" @click="changeScreen('form')">
               Agregar
             </VBtn>
           </div>
         </VContainer>
-    
+
         <VDivider />
-    
+
         <VTable class="text-no-wrap">
           <thead>
             <tr>
@@ -270,12 +208,7 @@ const deleteData = async (id: number) => {
                 <PreloadInterno />
               </td>
             </tr>
-            <tr
-              v-for="(item, index) in users"
-              v-show="!loading"
-              :key="index"
-              style="height: 3.75rem;"
-            >
+            <tr v-for="(item, index) in users" v-show="!loading" :key="index" style="height: 3.75rem;">
               <td>
                 <span>
                   {{ item.name }}
@@ -300,80 +233,41 @@ const deleteData = async (id: number) => {
                 <span>{{ item.role }}</span>
               </td>
               <td>
-                <VSwitch
-                  v-model="item.state"
-                  color="success"
-                  inset
-                  :value="item.state"
-                  :true-value="1"
-                  :false-value="0"
-                  hide-details
-                  @click="changeState(item, item.state)"
-                />
+                <VSwitch v-model="item.state" color="success" inset :value="item.state" :true-value="1" :false-value="0"
+                  hide-details @click="changeState(item, item.state)" />
               </td>
-              <td
-                class="text-center"
-                style="width: 5rem;"
-              >
-                <VBtn
-                  size="x-small"
-                  color="error"
-                  variant="text"
-                  @click="deleteData(item.id)"
-                >
-                  <VIcon
-                    size="22"
-                    icon="tabler-trash"
-                  />
+              <td class="text-center" style="width: 5rem;">
+                <VBtn size="x-small" color="error" variant="text" @click="deleteData(item.id)">
+                  <VIcon size="22" icon="tabler-trash" />
                 </VBtn>
-    
-                <VBtn
-                  icon
-                  size="x-small"
-                  color="default"
-                  variant="text"
-                  @click="changeScreen('form', item.id)"
-                >
-                  <VIcon
-                    size="22"
-                    icon="tabler-edit"
-                  />
+
+                <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
+                  <VIcon size="22" icon="tabler-edit" />
                 </VBtn>
               </td>
             </tr>
           </tbody>
-    
+
           <tfoot v-show="!users.length">
             <tr>
-              <td
-                colspan="7"
-                class="text-center"
-              >
+              <td colspan="7" class="text-center">
                 No se encuentran resultados
               </td>
             </tr>
           </tfoot>
         </VTable>
-    
+
         <VDivider />
-    
-        <VContainer
-          fluid
-          class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5"
-        >
+
+        <VContainer fluid class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5">
           <span class="text-sm text-disabled">
             {{ paginationData }}
           </span>
-    
-          <VPagination
-            v-model="currentPage"
-            size="small"
-            :total-visible="5"
-            :length="lastPage"
-          />
+
+          <VPagination v-model="currentPage" size="small" :total-visible="5" :length="lastPage" />
         </VContainer>
       </VCardText>
     </VCard>
- 
+
   </div>
 </template>

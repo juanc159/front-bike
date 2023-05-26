@@ -13,8 +13,6 @@ const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel }
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
-
-
 const fetchThird = async () => {
   await saleStore.fetchAll({
     company_id: authentication.company.id,

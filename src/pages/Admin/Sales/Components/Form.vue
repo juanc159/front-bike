@@ -60,7 +60,7 @@ const deleteThird = (id: number) => {
 const submitForm = async () => {
   formulario.value.company_id = authentication.company.id
   formulario.value.total = total.value
-  formulario.value.utilities = Number(total.value) - Number(value.value)
+  formulario.value.utilities = utilities.value
   const validation = await formValidation.value?.validate()
   if (validation?.valid) {
     if (formulario.value.thirds.length == 0) {
@@ -85,7 +85,7 @@ const total = computed(() => {
 });
 const utilities = computed(() => {
   const inventory = inventories.value.find(ele => ele.id == formulario.value.inventory_id)
-  return Number(total.value ?? 0) - Number(inventory?.value ?? 0)
+  return Number(inventory?.value ?? 0) - Number(total.value ?? 0)
 });
 
 

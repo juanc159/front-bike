@@ -90,82 +90,46 @@ onMounted(async () => {
 <template>
   <div>
     <VRow>
-      <VCol
-        cols="12"
-        class="d-flex justify-content-end"
-      >
-        <VBtn
-          color="secondary"
-          @click="changeScreen('back')"
-        >
+      <VCol cols="12" class="d-flex justify-content-end">
+        <VBtn color="secondary" @click="changeScreen('back')">
           Atras
         </VBtn>
       </VCol>
     </VRow>
 
-    <VForm
-      ref="formValidation"
-      lazy-validation
-    >
+    <VForm ref="formValidation" lazy-validation>
       <VRow>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.name"
-            maxlength="20"
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.name" maxlength="20"
             :rules="[requiredValidator, lengthMaxValidator(formulario.name, 20), lengthMinValidator(formulario.name, 8)]"
-            :error-messages="errors.name"
-            label="Nombre"
-            @keypress="errors.name = ''"
-          />
+            :error-messages="errors.name" label="Nombre" @keypress="errors.name = ''" />
         </VCol>
-        <VCol cols="4">
-          <VTextField
-            v-model="formulario.description"
-            :rules="[requiredValidator, lengthMaxValidator(formulario.description, 50)]"
-            maxlength="50"
-            :error-messages="errors.description"
-            label="Descripción"
-            @keypress="errors.description = ''"
-          />
+        <VCol cols="12" md="4">
+          <VTextField v-model="formulario.description"
+            :rules="[requiredValidator, lengthMaxValidator(formulario.description, 50)]" maxlength="50"
+            :error-messages="errors.description" label="Descripción" @keypress="errors.description = ''" />
         </VCol>
       </VRow>
 
       <VRow>
         <VCol>
           <span>Todos
-            <VCheckbox
-              v-model="todosCheck"
-              label="Todos"
-              @click="selectAll"
-            />
+            <VCheckbox v-model="todosCheck" label="Todos" @click="selectAll" />
           </span>
         </VCol>
       </VRow>
 
       <VRow>
-        <div
-          v-for="(item, index) in storeRole.arrayMenus"
-          :key="index"
-        >
+        <div v-for="(item, index) in storeRole.arrayMenus" :key="index">
           <VCol cols="3">
             <VCard width="215">
               <VCardItem>
                 <VCardTitle>{{ item.title }}</VCardTitle>
 
-                <VCardSubtitle
-                  v-for="(perm, i) in item.permissions"
-                  :key="i"
-                >
-                  <VCheckbox
-                    v-if="authentication.permissions.includes(perm.name)"
-                    :id="`check${index}-${i}`"
-                    v-model="perm.estado"
-                    :label="perm.name"
-                    true-value="Activo"
-                    false-value="Inactivo"
-                    :value="perm.estado"
-                    @click="changePermision(perm.id)"
-                  />
+                <VCardSubtitle v-for="(perm, i) in item.permissions" :key="i">
+                  <VCheckbox v-if="authentication.permissions.includes(perm.name)" :id="`check${index}-${i}`"
+                    v-model="perm.estado" :label="perm.name" true-value="Activo" false-value="Inactivo"
+                    :value="perm.estado" @click="changePermision(perm.id)" />
                 </VCardSubtitle>
               </VCardItem>
             </VCard>
@@ -175,10 +139,7 @@ onMounted(async () => {
 
       <VRow>
         <VCol cols="12 d-flex justify-content-center">
-          <VBtn
-            color="primary"
-            @click="submitForm"
-          >
+          <VBtn color="primary" @click="submitForm">
             Guardar
           </VBtn>
         </VCol>

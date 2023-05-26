@@ -24,19 +24,9 @@ const auth = useAuthenticationStore()
     <!-- 👉 navbar -->
     <template #navbar="{ toggleVerticalOverlayNavActive }">
       <div class="d-flex h-100 align-center">
-        <VBtn
-          v-if="isLessThanOverlayNavBreakpoint(windowWidth)"
-          icon
-          variant="text"
-          color="default"
-          class="ms-n3"
-          size="small"
-          @click="toggleVerticalOverlayNavActive(true)"
-        >
-          <VIcon
-            icon="tabler-menu-2"
-            size="24"
-          />
+        <VBtn v-if="isLessThanOverlayNavBreakpoint(windowWidth)" icon variant="text" color="default" class="ms-n3"
+          size="small" @click="toggleVerticalOverlayNavActive(true)">
+          <VIcon icon="tabler-menu-2" size="24" />
         </VBtn>
 
         <NavbarThemeSwitcher />
@@ -47,17 +37,14 @@ const auth = useAuthenticationStore()
         <!-- MENU CREAR -->
         <div class="d-flex justify-space-around mr-2" />
         <!-- FIN MENU CREAR -->
-        <ResetSessionTimeout /> 
+        <ResetSessionTimeout />
         <UserProfile />
       </div>
     </template>
 
     <!-- 👉 Pages -->
     <RouterView v-slot="{ Component }">
-      <Transition
-        :name="appRouteTransition"
-        mode="out-in"
-      >
+      <Transition :name="appRouteTransition" mode="out-in">
         <Component :is="Component" />
       </Transition>
     </RouterView>

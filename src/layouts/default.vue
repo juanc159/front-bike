@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useSkins } from '@core/composable/useSkins'
-import { useThemeConfig } from '@core/composable/useThemeConfig'
+import { useSkins } from '@core/composable/useSkins';
+import { useThemeConfig } from '@core/composable/useThemeConfig';
 
 // @layouts plugin
-import { AppContentLayoutNav } from '@layouts/enums'
+import { AppContentLayoutNav } from '@layouts/enums';
 
 const DefaultLayoutWithHorizontalNav = defineAsyncComponent(() => import('./components/DefaultLayoutWithHorizontalNav.vue'))
 const DefaultLayoutWithVerticalNav = defineAsyncComponent(() => import('./components/DefaultLayoutWithVerticalNav.vue'))

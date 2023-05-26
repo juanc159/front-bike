@@ -17,10 +17,7 @@ const { appRouteTransition } = useThemeConfig()
   <HorizontalNavLayout :nav-items="navItems">
     <!-- 👉 navbar -->
     <template #navbar>
-      <RouterLink
-        to="/"
-        class="app-logo d-flex align-center gap-x-3"
-      >
+      <RouterLink to="/" class="app-logo d-flex align-center gap-x-3">
         <VNodeRenderer :nodes="themeConfig.app.logo" />
 
         <h1 class="app-title font-weight-bold leading-normal text-xl">
@@ -35,14 +32,8 @@ const { appRouteTransition } = useThemeConfig()
 
     <!-- 👉 Pages -->
     <RouterView v-slot="{ Component, route }">
-      <Transition
-        :name="appRouteTransition"
-        mode="out-in"
-      >
-        <Component
-          :is="Component"
-          :key="route.path"
-        />
+      <Transition :name="appRouteTransition" mode="out-in">
+        <Component :is="Component" :key="route.path" />
       </Transition>
     </RouterView>
 

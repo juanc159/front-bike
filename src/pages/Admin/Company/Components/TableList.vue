@@ -83,36 +83,18 @@ const deleteData = async (id: number) => {
 </script>
 
 <template>
-  <VContainer
-    fluid
-    class="d-flex flex-wrap py-4 gap-4"
-  >
-    <div
-      class="me-3"
-      style="width: 80px;"
-    >
-      <VSelect
-        v-model="rowPerPage"
-        density="compact"
-        variant="outlined"
-        :items="[10, 20, 30, 50]"
-      />
+  <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
+    <div class="me-3" style="width: 80px;">
+      <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
     </div>
 
     <VSpacer />
 
     <div class="app-user-search-filter d-flex  align-center flex-wrap gap-4">
       <div style="width: 10rem;">
-        <VTextField
-          v-model="searchQuery"
-          placeholder="Buscar"
-          density="compact"
-        />
+        <VTextField v-model="searchQuery" placeholder="Buscar" density="compact" />
       </div>
-      <VBtn
-        color="primary"
-        @click="changeScreen('form')"
-      >
+      <VBtn color="primary" @click="changeScreen('form')">
         Crear empresa
       </VBtn>
     </div>
@@ -152,12 +134,7 @@ const deleteData = async (id: number) => {
           <PreloadInterno />
         </td>
       </tr>
-      <tr
-        v-for="(item, index) in companies"
-        v-show="!loading"
-        :key="index"
-        style="height: 3.75rem;"
-      >
+      <tr v-for="(item, index) in companies" v-show="!loading" :key="index" style="height: 3.75rem;">
         <td>
           <span>
             {{ item.name }}
@@ -184,51 +161,18 @@ const deleteData = async (id: number) => {
           </span>
         </td>
         <td>
-          <VSwitch
-            v-model="item.state"
-            color="success"
-            inset
-            :value="item.state"
-            :true-value="1"
-            :false-value="0"
-            hide-details
-            @click="changeState(item, item.state)"
-          />
+          <VSwitch v-model="item.state" color="success" inset :value="item.state" :true-value="1" :false-value="0"
+            hide-details @click="changeState(item, item.state)" />
         </td>
-        <td
-          class="text-center"
-          style="width: 5rem;"
-        >
-          <VBtn
-            icon
-            size="x-small"
-            color="error"
-            variant="text"
-            @click="deleteData(item.id)"
-          >
-            <VIcon
-              size="22"
-              icon="tabler-trash"
-            />
+        <td class="text-center" style="width: 5rem;">
+          <VBtn icon size="x-small" color="error" variant="text" @click="deleteData(item.id)">
+            <VIcon size="22" icon="tabler-trash" />
           </VBtn>
 
-          <VBtn
-            icon
-            size="x-small"
-            color="default"
-            variant="text"
-            @click="changeScreen('form', item.id)"
-          >
-            <VIcon
-              size="22"
-              icon="tabler-edit"
-            />
+          <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
+            <VIcon size="22" icon="tabler-edit" />
           </VBtn>
-          <VBtn
-            v-show="item.state === 1"
-            color="primary"
-            @click="selectCompany(item)"
-          >
+          <VBtn v-show="item.state === 1" color="primary" @click="selectCompany(item)">
             Ingresar
           </VBtn>
         </td>
@@ -237,10 +181,7 @@ const deleteData = async (id: number) => {
 
     <tfoot v-show="!companies.length">
       <tr>
-        <td
-          colspan="7"
-          class="text-center"
-        >
+        <td colspan="7" class="text-center">
           No se encuentran resultados
         </td>
       </tr>
@@ -249,19 +190,11 @@ const deleteData = async (id: number) => {
 
   <VDivider />
 
-  <VContainer
-    fluid
-    class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5"
-  >
+  <VContainer fluid class="d-flex align-center flex-wrap justify-space-between gap-4 py-3 px-5">
     <span class="text-sm text-disabled">
       {{ paginationData }}
     </span>
 
-    <VPagination
-      v-model="currentPage"
-      size="small"
-      :total-visible="5"
-      :length="lastPage"
-    />
+    <VPagination v-model="currentPage" size="small" :total-visible="5" :length="lastPage" />
   </VContainer>
 </template>
