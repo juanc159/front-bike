@@ -6,6 +6,8 @@ export default interface IInventoryList {
   color: null | string
   plate: null | string
   registrationSite: null | string
-  value: null | string
+  purchaseValue: null | string
+  saleValue: null | string
   vehicleType: null | string
+  days: null | string
 }

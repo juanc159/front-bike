@@ -74,10 +74,15 @@ const submitForm = async () => {
   }
 }
 
-const value = computed(() => {
+const purchaseValue = computed(() => {
   const inv = inventories.value.find(ele => ele.id == formulario.value.inventory_id)
-  return inv?.value ?? 0
+  return inv?.purchaseValue ?? 0
 });
+const saleValue = computed(() => {
+  const inv = inventories.value.find(ele => ele.id == formulario.value.inventory_id)
+  return inv?.saleValue ?? 0
+});
+
 const total = computed(() => {
   return formulario.value.thirds.reduce((acumulador, item) => {
     return Number(acumulador) + Number(item.amount);
@@ -85,7 +90,7 @@ const total = computed(() => {
 });
 const utilities = computed(() => {
   const inventory = inventories.value.find(ele => ele.id == formulario.value.inventory_id)
-  return Number(inventory?.value ?? 0) - Number(total.value ?? 0)
+  return inventory?.saleValue - (Number(inventory?.purchaseValue ?? 0) + Number(total.value ?? 0))
 });
 
 
@@ -113,7 +118,10 @@ onMounted(async () => {
           <VSelect clearable v-model="formulario.inventory_id" item-title="reference" item-value="id" :items="inventories"
             :rules="[requiredValidator]" :error-messages="errors.inventory_id" label="Inventario"
             @update:model-value="errors.inventory_id = ''" />
-          <b>Valor: {{ value }}</b>
+          <div>
+            <b>Valor Compra: {{ purchaseValue }}</b> <br>
+            <b>Valor Venta: {{ saleValue }}</b>
+          </div>
         </VCol>
         <VCol cols="12" md="8">
           <VForm ref="formThirdValidation" lazy-validation>

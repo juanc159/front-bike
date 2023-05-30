@@ -72,6 +72,11 @@ const deleteData = async (id: number) => {
     }
   })
 }
+
+
+const changeSate = (obj: object) => {
+  inventoryStore.changeSate(obj.id, obj.state)
+}
 </script>
 
 <template>
@@ -100,6 +105,9 @@ const deleteData = async (id: number) => {
       <thead>
         <tr>
           <th scope="col">
+            Dias
+          </th>
+          <th scope="col">
             Tipo de Vehículo
           </th>
           <th scope="col">
@@ -121,7 +129,13 @@ const deleteData = async (id: number) => {
             Sitio de matricula
           </th>
           <th scope="col">
-            Valor
+            Valor Compra
+          </th>
+          <th scope="col">
+            Valor Venta
+          </th>
+          <th scope="col">
+            Estado
           </th>
           <th scope="col">
             Acciones
@@ -135,6 +149,12 @@ const deleteData = async (id: number) => {
           </td>
         </tr>
         <tr v-for="(item, index) in inventories" v-show="!loading" :key="index" style="height: 3.75rem;">
+          <td>
+            <VChip size="large" v-if="item.days < '30'" color="success"> {{ item.days }}</VChip>
+            <VChip size="large" v-if="item.days >= '16' && item.days <= '30'" color="warning"> {{ item.days }}</VChip>
+            <VChip size="large" v-if="item.days > '30'" color="danger"> {{ item.days }}</VChip>
+
+          </td>
           <td>
             <span>
               {{ item.vehicleType }}
@@ -165,16 +185,25 @@ const deleteData = async (id: number) => {
             <span>{{ item.registrationSite }}</span>
           </td>
           <td>
-            <span>{{ item.value }}</span>
+            <span>{{ item.purchaseValue }}</span>
           </td>
-          <td class="text-center" style="width: 5rem;">
-            <VBtn size="x-small" color="error" variant="text" @click="deleteData(item.id)">
+          <td>
+            <span>{{ item.saleValue }}</span>
+          </td>
+          <td>
+            <VSelect v-model="item.state" @update:model-value="changeSate(item)"
+              :items="['Ingresado', 'Separado', 'Vendido']"></VSelect>
+          </td>
+          <td class="text-center d-flex justify-content-center aling-items-center">
+            <VBtn class="mr-2" icon size="x-small" color="error" @click="deleteData(item.id)">
               <VIcon size="22" icon="tabler-trash" />
             </VBtn>
 
-            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
+            <VBtn class="mr-2" icon size="x-small" color="default" @click="changeScreen('form', item.id)">
               <VIcon size="22" icon="tabler-edit" />
             </VBtn>
+
+
           </td>
         </tr>
       </tbody>

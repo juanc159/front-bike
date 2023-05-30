@@ -1,35 +1,55 @@
+<script setup lang="ts">
+import { useDashboardStore } from "@/stores/useDashboardStore";
+import { num_miles } from '@validators';
+const dashboardStore = useDashboardStore()
+const { shoppings, sales, thirds, utilities } = storeToRefs(dashboardStore)
+dashboardStore.getData()
+</script>
 <template>
   <div>
-    <VCard class="mb-6" title="Dashboard">
-      <VCardText>
+    <VCard class="mb-6">
+      <VCardTitle primary-title>
+        <span class="text-primary">Dashboard</span>
+      </VCardTitle>
+      <VCardText class="d-flex justify-content-center aling-items-center">
         <VRow>
-          <VCol cols="6">
-            <VCard class="mb-6" title="1">
+          <VCol cols="12" md="3">
+            <VCard class="mb-6 text-center">
+              <VCardTitle primary-title>
+                <span class="text-primary">Compras</span>
+              </VCardTitle>
               <VCardText>
-                aaa
+                {{ num_miles(shoppings) }}
               </VCardText>
             </VCard>
           </VCol>
-          <VCol cols="6">
-            <VCard class="mb-6" title="2">
+          <VCol cols="12" md="3">
+            <VCard class="mb-6 text-center">
+              <VCardTitle primary-title>
+                <span class="text-primary">Terceros</span>
+              </VCardTitle>
               <VCardText>
-                bbb
+                {{ num_miles(thirds) }}
               </VCardText>
             </VCard>
           </VCol>
-        </VRow>
-        <VRow>
-          <VCol cols="6">
-            <VCard class="mb-6" title="3">
+          <VCol cols="12" md="3">
+            <VCard class="mb-6 text-center">
+              <VCardTitle primary-title>
+                <span class="text-primary">Ventas</span>
+              </VCardTitle>
               <VCardText>
-                ccc
+                {{ num_miles(sales) }}
               </VCardText>
             </VCard>
           </VCol>
-          <VCol cols="6">
-            <VCard class="mb-6" title="4">
+          <VCol cols="12" md="3">
+            <VCard class="mb-6 text-center">
+              <VCardTitle primary-title>
+                <span class="text-primary">Utilidades</span>
+              </VCardTitle>
               <VCardText>
-                ddd
+                {{ num_miles(utilities) }}
               </VCardText>
             </VCard>
           </VCol>

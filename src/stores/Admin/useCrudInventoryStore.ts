@@ -19,8 +19,11 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       color: null,
       plate: null,
       registrationSite: null,
-      value: null,
+      purchaseValue: null,
+      saleValue: null,
       vehicleType: null,
+      state: "Ingresado",
+      days: 0,
     } as IInventoryForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
@@ -42,8 +45,11 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         color: null,
         plate: null,
         registrationSite: null,
-        value: null,
+        purchaseValue: null,
+        saleValue: null,
         vehicleType: null,
+        state: "Ingresado",
+        days: 0,
       }
     },
     async fetchAll(params: object): Promise<void> {
@@ -130,6 +136,24 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         console.log(await error)
       })
     },
+
+    async changeSate(id: number, state: string): Promise<void> {
+      await axiosIns.post(
+        `/inventory-changeState`, {
+        id: id,
+        state: state,
+      }
+      ).then(async result => {
+        if (result.data.code === 200) {
+          const data = await result.data.data;
+          const obj = this.inventories.find(ele => ele.id === data.id)
+          obj.state = data.state
+          toast.toast('Éxito', result.data.message, 'success')
+        }
+      }).catch(async error => {
+        console.log(await error)
+      })
+    }
 
   },
 })

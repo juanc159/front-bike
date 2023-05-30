@@ -116,7 +116,10 @@ const deleteData = async (id: number) => {
             Referencia
           </th>
           <th scope="col">
-            valor
+            Valor Compra
+          </th>
+          <th scope="col">
+            Valor Venta
           </th>
           <th scope="col">
             Total
@@ -136,6 +139,7 @@ const deleteData = async (id: number) => {
           </td>
         </tr>
         <tr v-for="(item, index) in sales" v-show="!loading" :key="index" style="height: 3.75rem;">
+
           <td>
             <span>
               {{ item.inventory_reference }}
@@ -143,7 +147,12 @@ const deleteData = async (id: number) => {
           </td>
           <td>
             <span>
-              {{ item.inventory_value }}
+              {{ item.inventory_purchaseValue }}
+            </span>
+          </td>
+          <td>
+            <span>
+              {{ item.inventory_saleValue }}
             </span>
           </td>
           <td>
