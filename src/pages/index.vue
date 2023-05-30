@@ -9,47 +9,55 @@ dashboardStore.getData()
   <div>
     <VCard class="mb-6">
       <VCardTitle primary-title>
-        <span class="text-primary">Dashboard</span>
+        <span class="text-primary sizeFont">Dashboard</span>
       </VCardTitle>
       <VCardText class="d-flex justify-content-center aling-items-center">
         <VRow>
           <VCol cols="12" md="3">
             <VCard class="mb-6 text-center">
               <VCardTitle primary-title>
-                <span class="text-primary">Compras</span>
+                <span class="text-primary sizeFont">Compras</span>
               </VCardTitle>
               <VCardText>
-                {{ num_miles(shoppings) }}
+                <span class="sizeFont">
+                  {{ num_miles(shoppings) }}
+                </span>
               </VCardText>
             </VCard>
           </VCol>
           <VCol cols="12" md="3">
             <VCard class="mb-6 text-center">
               <VCardTitle primary-title>
-                <span class="text-primary">Terceros</span>
+                <span class="text-primary sizeFont">Terceros</span>
               </VCardTitle>
               <VCardText>
-                {{ num_miles(thirds) }}
+                <span class="sizeFont">
+                  {{ num_miles(thirds) }}
+                </span>
               </VCardText>
             </VCard>
           </VCol>
           <VCol cols="12" md="3">
             <VCard class="mb-6 text-center">
               <VCardTitle primary-title>
-                <span class="text-primary">Ventas</span>
+                <span class="text-primary sizeFont">Ventas</span>
               </VCardTitle>
               <VCardText>
-                {{ num_miles(sales) }}
+                <span class="sizeFont">
+                  {{ num_miles(sales) }}
+                </span>
               </VCardText>
             </VCard>
           </VCol>
           <VCol cols="12" md="3">
             <VCard class="mb-6 text-center">
               <VCardTitle primary-title>
-                <span class="text-primary">Utilidades</span>
+                <span class="text-primary sizeFont">Utilidades</span>
               </VCardTitle>
               <VCardText>
-                {{ num_miles(utilities) }}
+                <span class="sizeFont">
+                  {{ num_miles(utilities) }}
+                </span>
               </VCardText>
             </VCard>
           </VCol>
@@ -59,3 +67,10 @@ dashboardStore.getData()
 
   </div>
 </template>
+
+<style scoped>
+.sizeFont {
+  font-size: 24px;
+  /* Tamaño de letra personalizado */
+}
+</style>

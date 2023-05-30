@@ -23,7 +23,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       saleValue: null,
       vehicleType: null,
       state: "Ingresado",
-      days: 0,
+      days: 1,
     } as IInventoryForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
@@ -49,7 +49,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         saleValue: null,
         vehicleType: null,
         state: "Ingresado",
-        days: 0,
+        days: 1,
       }
     },
     async fetchAll(params: object): Promise<void> {

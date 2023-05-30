@@ -95,11 +95,11 @@ onMounted(async () => {
         </VCol>
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.purchaseValue" maxlength="15" :rules="[requiredValidator, integerValidator]"
-            :error-messages="errors.purchaseValue" label="Valor" @keypress="errors.purchaseValue = '';" />
+            :error-messages="errors.purchaseValue" label="Valor de Compra" @keypress="errors.purchaseValue = '';" />
         </VCol>
         <VCol cols="12" md="4">
           <VTextField v-model="formulario.saleValue" maxlength="15" :rules="[requiredValidator, integerValidator]"
-            :error-messages="errors.saleValue" label="Valor" @keypress="errors.saleValue = '';" />
+            :error-messages="errors.saleValue" label="Valor de Venta" @keypress="errors.saleValue = '';" />
         </VCol>
       </VRow>
       <VRow>
