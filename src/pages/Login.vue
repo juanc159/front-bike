@@ -25,7 +25,7 @@ const authentication = useAuthenticationStore()
 
 const login = async () => {
   await authentication.login(formulario).then(resp => {
-    router.push({ name: 'Admin-Company-Index' })
+    router.push({ name: 'Admin-Dashboard-Index' })
   })
 }
 

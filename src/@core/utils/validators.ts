@@ -128,7 +128,7 @@ export const validarCampoNumerico = (value: unknown) => {
   if (isNaN(value) || value < 0 || value > 9.99) {
     return "El campo debe tener mínimo un valor de  9.99"; // el valor no es numérico o está fuera de rango
   }
-  return 
+  return
 }
 
 export const validateMinimumCharacters = (value: unknown, min: number = 0) => {
@@ -176,51 +176,51 @@ export const num_miles = (num: unknown = 0): string => {
     formatted = integerPart[i] + formatted;
     count++;
   }
-  return formatted + "," + decimalPart;
+  return formatted;
 };
 
 
-  export const validarInputNumerosMiles = (num: unknown = 0): string => {
-    // Convierte `num` a una cadena de texto, si es necesario.
-    let str = num.toString();
-    // Separa la cadena en partes entera y decimal.
-    const parts = str.split(",");
-    let integerPart = parts[0];
-    let decimalPart = "";
-    if (parts.length > 1) {
-      decimalPart = "," + parts[1];
-    }
-    // Quita los separadores de miles de la parte entera.
-    integerPart = integerPart.replace(/\./g, "");
-    // Convierte la parte entera a un número.
-    let numIntegerPart = Number(integerPart);
-    if (isNaN(numIntegerPart)) {
-      numIntegerPart = 0;
-    }
-    // Formatea el número con separadores de miles.
-    const formatted = numIntegerPart.toLocaleString("es-ES");
-    return formatted + decimalPart;
-  };
+export const validarInputNumerosMiles = (num: unknown = 0): string => {
+  // Convierte `num` a una cadena de texto, si es necesario.
+  let str = num.toString();
+  // Separa la cadena en partes entera y decimal.
+  const parts = str.split(",");
+  let integerPart = parts[0];
+  let decimalPart = "";
+  if (parts.length > 1) {
+    decimalPart = "," + parts[1];
+  }
+  // Quita los separadores de miles de la parte entera.
+  integerPart = integerPart.replace(/\./g, "");
+  // Convierte la parte entera a un número.
+  let numIntegerPart = Number(integerPart);
+  if (isNaN(numIntegerPart)) {
+    numIntegerPart = 0;
+  }
+  // Formatea el número con separadores de miles.
+  const formatted = numIntegerPart.toLocaleString("es-ES");
+  return formatted + decimalPart;
+};
 
-  export const validarDateBeetwen = (dateValue:string,dateInit: string,dateFin: string): string|boolean => {
-    let d1 = moment(dateInit);
-    let d2 = moment(dateFin);
-    let d3 = moment(dateValue);
-    const validate = d3.isBetween(d1,d2,null,"[]");
-    if(validate) return true;
-    else return `Este campo tiene que ser despues de ${d1.format('YYYY-MM-DD')} y hasta ${d2.format('YYYY-MM-DD')}`;
-  };
-  export const validarDateBeforeOrSame = (dateValue:string,dateInit: string): string|boolean => {
-    let d1 = moment(dateInit); 
-    let d2 = moment(dateValue); 
-    const validate = d1.isSameOrBefore(d2);
-    if(validate) return true;
-    else return `Este campo tiene que ser despues o igual de ${d1.format('YYYY-MM-DD')}`;
-  };
-  export const validarDateAfterOrSame = (dateValue:string,dateInit: string): string|boolean => {
-    let d1 = moment(dateInit); 
-    let d2 = moment(dateValue); 
-    const validate = d1.isSameOrAfter(d2);
-    if(validate) return true;
-    else return `Este campo tiene que ser antes o igual de ${d1.format('YYYY-MM-DD')}`;
-  };
+export const validarDateBeetwen = (dateValue: string, dateInit: string, dateFin: string): string | boolean => {
+  let d1 = moment(dateInit);
+  let d2 = moment(dateFin);
+  let d3 = moment(dateValue);
+  const validate = d3.isBetween(d1, d2, null, "[]");
+  if (validate) return true;
+  else return `Este campo tiene que ser despues de ${d1.format('YYYY-MM-DD')} y hasta ${d2.format('YYYY-MM-DD')}`;
+};
+export const validarDateBeforeOrSame = (dateValue: string, dateInit: string): string | boolean => {
+  let d1 = moment(dateInit);
+  let d2 = moment(dateValue);
+  const validate = d1.isSameOrBefore(d2);
+  if (validate) return true;
+  else return `Este campo tiene que ser despues o igual de ${d1.format('YYYY-MM-DD')}`;
+};
+export const validarDateAfterOrSame = (dateValue: string, dateInit: string): string | boolean => {
+  let d1 = moment(dateInit);
+  let d2 = moment(dateValue);
+  const validate = d1.isSameOrAfter(d2);
+  if (validate) return true;
+  else return `Este campo tiene que ser antes o igual de ${d1.format('YYYY-MM-DD')}`;
+};

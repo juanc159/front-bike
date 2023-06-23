@@ -1,20 +1,34 @@
 <script lang="ts" setup type="module">
 import Swal from 'sweetalert2';
 
+import { num_miles } from '@/@core/utils/validators';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
-import { useCrudSaleStore } from '@/stores/Admin/useCrudSaleStore';
+import { useCrudAdministrationStore } from '@/stores/Admin/useCrudAdministrationStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 
 const authentication = useAuthenticationStore()
-const saleStore = useCrudSaleStore()
+const administrationStore = useCrudAdministrationStore()
 
 //  data paginate
-const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel } = storeToRefs(saleStore)
+const { administrations, totalPage, lastPage, currentPage, totalData, loading } = storeToRefs(administrationStore)
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
-const fetchThird = async () => {
-  await saleStore.fetchAll({
+const total_sum_costs = computed(() => {
+  return administrations.value.reduce((acumulator, currentValue) => acumulator + Number(currentValue.cost) ?? 0, 0)
+})
+
+const total_sum_costs_inactive = computed(() => {
+  return administrations.value.reduce((acumulator, currentValue) => currentValue.status != 1 ? acumulator + Number(currentValue.cost) ?? 0 : acumulator + 0, 0)
+})
+
+const total_sum_costs_active = computed(() => {
+  return administrations.value.reduce((acumulator, currentValue) => currentValue.status != 0 ? acumulator + Number(currentValue.cost) ?? 0 : acumulator + 0, 0)
+})
+
+
+const fetchAdministration = async () => {
+  await administrationStore.fetchAll({
     company_id: authentication.company.id,
     perPage: rowPerPage.value,
     page: currentPage.value,
@@ -23,7 +37,7 @@ const fetchThird = async () => {
 }
 
 onMounted(async () => {
-  await fetchThird()
+  await fetchAdministration()
 })
 
 watch(currentPage, async () => {
@@ -34,33 +48,24 @@ watch(rowPerPage, async () => {
   currentPage.value = 1
 })
 watchArray([currentPage, searchQuery, rowPerPage], async () => {
-  await fetchThird()
+  await fetchAdministration()
 })
 
 // 👉 Computing pagination data
 const paginationData = computed(() => {
-  const firstIndex = sales.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
-  const lastIndex = sales.value.length + ((currentPage.value - 1) * totalPage.value)
+  const firstIndex = administrations.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
+  const lastIndex = administrations.value.length + ((currentPage.value - 1) * totalPage.value)
 
   return `Mostrando ${firstIndex} a ${lastIndex} de ${totalData.value} registros`
 })
 
 const changeScreen = async (screen: string, userId: number | null = null) => {
-  saleStore.clearFormulario()
-  saleStore.typeAction = screen
+  administrationStore.clearFormulario()
+  administrationStore.typeAction = screen
   if (userId)
-    saleStore.fetchInfo(userId)
+    administrationStore.fetchInfo(userId)
 }
 
-
-// DESCARGAR EXCEL
-const dowloadExcel = async () => {
-  await saleStore.excel({
-    company_id: authentication.company.id
-  }).then(resp => {
-    window.open(pathExcel.value, '_blank');
-  });
-}
 
 
 const deleteData = async (id: number) => {
@@ -72,8 +77,8 @@ const deleteData = async (id: number) => {
     denyButtonText: 'No',
   }).then(async result => {
     if (result.isConfirmed) {
-      await saleStore.fetchDelete(id)
-      await fetchThird()
+      await administrationStore.fetchDelete(id)
+      await fetchAdministration()
     }
     else if (result.isDenied) {
     }
@@ -87,12 +92,6 @@ const deleteData = async (id: number) => {
     <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
       <div class="me-3" style="width: 80px;">
         <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
-      </div>
-      <div class="me-3" style="width: 80px;">
-        <VBtn mt-2 size="x-small" color="default" variant="text" title="Descargar" @click="dowloadExcel()">
-          <VIcon size="30" icon="mdi-file-excel"></VIcon>
-          Excel
-        </VBtn>
       </div>
 
       <VSpacer />
@@ -113,19 +112,19 @@ const deleteData = async (id: number) => {
       <thead>
         <tr>
           <th scope="col">
-            Referencia
+            Nombre
           </th>
           <th scope="col">
-            Valor Compra
+            Fecha Inicial
           </th>
           <th scope="col">
-            Valor Venta
+            Fecha Final
           </th>
           <th scope="col">
-            Total
+            Estado
           </th>
           <th scope="col">
-            Utilidades
+            Costo
           </th>
           <th scope="col">
             Acciones
@@ -134,52 +133,54 @@ const deleteData = async (id: number) => {
       </thead>
       <tbody>
         <tr v-show="loading">
-          <td colspan="4">
+          <td colspan="6">
             <PreloadInterno />
           </td>
         </tr>
-        <tr v-for="(item, index) in sales" v-show="!loading" :key="index" style="height: 3.75rem;">
-
+        <tr v-for="(item, index) in administrations" v-show="!loading" :key="index" style="height: 3.75rem;">
           <td>
             <span>
-              {{ item.inventory_reference }}
+              {{ item.name }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.inventory_purchaseValue }}
+              {{ item.init_date }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.price_vehicle }}
+              {{ item.final_date }}
+            </span>
+          </td>
+          <td>
+            <span v-if="item.status == 1">
+              Pagado
+            </span>
+            <span v-if="item.status == 0">
+              Sin Pagar
             </span>
           </td>
           <td>
             <span>
-              {{ item.total }}
-            </span>
-          </td>
-          <td>
-            <span>
-              {{ item.utilities }}
+              {{ num_miles(item.cost) }}
             </span>
           </td>
           <td class="text-center" style="width: 5rem;">
+            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
+              <VIcon size="22" icon="tabler-edit" />
+            </VBtn>
             <VBtn size="x-small" color="error" variant="text" @click="deleteData(item.id)">
               <VIcon size="22" icon="tabler-trash" />
             </VBtn>
 
-            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
-              <VIcon size="22" icon="tabler-edit" />
-            </VBtn>
           </td>
         </tr>
       </tbody>
 
-      <tfoot v-show="!sales.length">
+      <tfoot v-show="!administrations.length">
         <tr>
-          <td colspan="4" class="text-center">
+          <td colspan="6" class="text-center">
             No se encuentran resultados
           </td>
         </tr>
@@ -196,6 +197,25 @@ const deleteData = async (id: number) => {
 
       <VPagination v-model="currentPage" size="small" :total-visible="5" :length="lastPage" />
     </VContainer>
-
+    <VRow class="mt-5 mb-5">
+      <VCol sm="6">
+        <h2>Total Sin Pagar</h2>
+      </VCol>
+      <VCol sm="6">
+        <h2>{{ num_miles(total_sum_costs_inactive) }}</h2>
+      </VCol>
+      <VCol sm="6">
+        <h2>Total Pagado</h2>
+      </VCol>
+      <VCol sm="6">
+        <h2>{{ num_miles(total_sum_costs_active) }}</h2>
+      </VCol>
+      <VCol sm="6">
+        <h2>Valor Total</h2>
+      </VCol>
+      <VCol sm="6">
+        <h2>{{ num_miles(total_sum_costs) }}</h2>
+      </VCol>
+    </VRow>
   </div>
 </template>

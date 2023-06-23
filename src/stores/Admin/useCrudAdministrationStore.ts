@@ -1,66 +1,54 @@
 import { useToast } from '@/composables/useToast'
-import type IInventoryForm from '@/interfaces/Admin/Inventory/IInventoryForm'
-import type IInventoryList from '@/interfaces/Admin/Inventory/IInventoryList'
+import type IAdministrationForm from '@/interfaces/Admin/Administration/IAdministrationForm'
+import type IAdministrationList from '@/interfaces/Admin/Administration/IAdministrationList'
 import axiosIns from '@/plugins/axios'
 import { usePreloadStore } from '@/stores/usePreloadStore'
 import { defineStore } from 'pinia'
 
-
 const toast = useToast()
 
-export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
+export const useCrudAdministrationStore = defineStore('useCrudAdministrationStore', {
   state: () => ({
     loading: true as boolean,
     formulario: {
       id: null,
-      reference: null,
-      brand: null,
-      model: null,
-      color: null,
-      plate: null,
-      registrationSite: null,
-      purchaseValue: null,
-      vehicleType: null,
-      state: "Ingresado",
-      days: 1,
-    } as IInventoryForm,
+      name: null,
+      cost: null,
+      init_date: null,
+      final_date: null,
+      status: 1,
+      company_id: null
+    } as IAdministrationForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
-    inventories: [] as Array<IInventoryList>,
+    administrations: [] as Array<IAdministrationList>,
     totalData: 0 as number,
     totalPage: 0 as number,
     currentPage: 1 as number,
     lastPage: 0 as number,
-    form: {
-      batter: 'No'
-    }
   }),
   getters: {
   },
   actions: {
     clearFormulario() {
-      this.formulario = <IInventoryForm>{
+      this.formulario = <IAdministrationForm>{
         id: null,
-        reference: null,
-        brand: null,
-        model: null,
-        color: null,
-        plate: null,
-        registrationSite: null,
-        purchaseValue: null,
-        vehicleType: null,
-        state: "Ingresado",
-        days: 1,
+        name: null,
+        cost: null,
+        init_date: null,
+        final_date: null,
+        status: 1,
+        company_id: null
       }
     },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
       await axiosIns.post(
-        '/inventory-list',
+        '/administration-list',
         params,
       ).then(result => {
         this.loading = false
-        this.inventories = result.data.inventories
+        this.administrations = result.data.administrations
         this.totalData = result.data.totalData
         this.totalPage = result.data.totalPage
         this.currentPage = result.data.currentPage
@@ -76,14 +64,13 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       preload.isLoading = true
 
       const response = await axiosIns.post(
-        '/inventory-create',
+        '/administration-create',
         this.formulario,
       ).then(result => {
         preload.isLoading = false
         if (result.data.code === 200) {
           this.formulario = result.data.data
           this.clearFormulario()
-          this.form.batter = 'No'
           toast.toast('Éxito', result.data.message, 'success')
         }
 
@@ -114,7 +101,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
 
       preload.isLoading = true
       await axiosIns.delete(
-        `/inventory-delete/${id}`,
+        `/administration-delete/${id}`,
       ).then(result => {
         preload.isLoading = false
         toast.toast('Éxito', result.data.message, 'success')
@@ -128,7 +115,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       const preload = usePreloadStore()
       preload.isLoading = true
       await axiosIns.get(
-        `/inventory-info/${id}`,
+        `/administration-info/${id}`,
       ).then(async result => {
         console.log('RESULT', result)
         preload.isLoading = false
@@ -138,24 +125,6 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         console.log(await error)
       })
     },
-
-    async changeSate(id: number, state: string): Promise<void> {
-      await axiosIns.post(
-        `/inventory-changeState`, {
-        id: id,
-        state: state,
-      }
-      ).then(async result => {
-        if (result.data.code === 200) {
-          const data = await result.data.data;
-          const obj = this.inventories.find(ele => ele.id === data.id)
-          obj.state = data.state
-          toast.toast('Éxito', result.data.message, 'success')
-        }
-      }).catch(async error => {
-        console.log(await error)
-      })
-    }
 
   },
 })

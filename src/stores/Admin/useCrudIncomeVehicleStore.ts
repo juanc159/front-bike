@@ -1,66 +1,71 @@
 import { useToast } from '@/composables/useToast'
-import type IInventoryForm from '@/interfaces/Admin/Inventory/IInventoryForm'
-import type IInventoryList from '@/interfaces/Admin/Inventory/IInventoryList'
+import type IIncomeVehicleForm from '@/interfaces/Admin/IncomeVehicle/IIncomeVehicleForm'
+import type IIncomeVehicleList from '@/interfaces/Admin/IncomeVehicle/IIncomeVehicleList'
 import axiosIns from '@/plugins/axios'
 import { usePreloadStore } from '@/stores/usePreloadStore'
 import { defineStore } from 'pinia'
 
-
+import { useAuthenticationStore } from '@/stores/useAuthenticationStore'
 const toast = useToast()
 
-export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
+export const useCrudIncomeVehicleStore = defineStore('useCrudIncomeVehicleStore', {
   state: () => ({
     loading: true as boolean,
     formulario: {
       id: null,
-      reference: null,
+      date_init: null,
+      mecanic_id: null,
+      type_vehicle: null,
       brand: null,
-      model: null,
-      color: null,
+      pay_labor: null,
       plate: null,
-      registrationSite: null,
-      purchaseValue: null,
-      vehicleType: null,
-      state: "Ingresado",
-      days: 1,
-    } as IInventoryForm,
+      value_labor: null,
+      value_parts: null,
+      total_costs: null,
+      paid_labor: null,
+      date_pay_labor: null,
+      utilites: null,
+      company_id: null
+    } as IIncomeVehicleForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
-    inventories: [] as Array<IInventoryList>,
+    incomeVehicles: [] as Array<IIncomeVehicleList>,
     totalData: 0 as number,
     totalPage: 0 as number,
     currentPage: 1 as number,
     lastPage: 0 as number,
-    form: {
-      batter: 'No'
-    }
+    operatives: [] as Array<object>,
+    typeArrangement: [] as Array<object>
   }),
   getters: {
   },
   actions: {
     clearFormulario() {
-      this.formulario = <IInventoryForm>{
+      this.formulario = <IIncomeVehicleForm>{
         id: null,
-        reference: null,
+        date_init: null,
+        mecanic_id: null,
+        type_vehicle: null,
         brand: null,
-        model: null,
-        color: null,
+        pay_labor: null,
         plate: null,
-        registrationSite: null,
-        purchaseValue: null,
-        vehicleType: null,
-        state: "Ingresado",
-        days: 1,
+        value_labor: null,
+        value_parts: null,
+        total_costs: null,
+        paid_labor: null,
+        date_pay_labor: null,
+        utilites: null,
+        company_id: null
       }
     },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
       await axiosIns.post(
-        '/inventory-list',
+        '/incomeVehicle-list',
         params,
       ).then(result => {
         this.loading = false
-        this.inventories = result.data.inventories
+        this.incomeVehicles = result.data.incomeVehicles
         this.totalData = result.data.totalData
         this.totalPage = result.data.totalPage
         this.currentPage = result.data.currentPage
@@ -76,7 +81,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       preload.isLoading = true
 
       const response = await axiosIns.post(
-        '/inventory-create',
+        '/incomeVehicle-create',
         this.formulario,
       ).then(result => {
         preload.isLoading = false
@@ -114,7 +119,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
 
       preload.isLoading = true
       await axiosIns.delete(
-        `/inventory-delete/${id}`,
+        `/incomeVehicle-delete/${id}`,
       ).then(result => {
         preload.isLoading = false
         toast.toast('Éxito', result.data.message, 'success')
@@ -128,7 +133,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       const preload = usePreloadStore()
       preload.isLoading = true
       await axiosIns.get(
-        `/inventory-info/${id}`,
+        `/incomeVehicle-info/${id}`,
       ).then(async result => {
         console.log('RESULT', result)
         preload.isLoading = false
@@ -139,16 +144,33 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       })
     },
 
+    async fetchDataForm(): Promise<void> {
+      const preload = usePreloadStore()
+      const authentication = useAuthenticationStore()
+      preload.isLoading = true
+      await axiosIns.post(
+        `/incomeVehicle-dataForm`, { company_id: authentication.company.id }
+      ).then(async result => {
+        preload.isLoading = false
+        this.operatives = await result.data.operatives
+        this.typeArrangement = await result.data.typeArrangement
+      }).catch(async error => {
+        preload.isLoading = false
+        console.log(await error)
+      })
+    },
+
+
     async changeSate(id: number, state: string): Promise<void> {
       await axiosIns.post(
-        `/inventory-changeState`, {
+        `/incomeVehicle-changeState`, {
         id: id,
         state: state,
       }
       ).then(async result => {
         if (result.data.code === 200) {
           const data = await result.data.data;
-          const obj = this.inventories.find(ele => ele.id === data.id)
+          const obj = this.incomeVehicles.find(ele => ele.id === data.id)
           obj.state = data.state
           toast.toast('Éxito', result.data.message, 'success')
         }

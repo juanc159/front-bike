@@ -2,28 +2,30 @@
 import Swal from 'sweetalert2';
 
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
-import { useCrudSaleStore } from '@/stores/Admin/useCrudSaleStore';
+import { useCrudMecanicStore } from '@/stores/Admin/useCrudMecanicStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 
 const authentication = useAuthenticationStore()
-const saleStore = useCrudSaleStore()
+const mecanicStore = useCrudMecanicStore()
 
 //  data paginate
-const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel } = storeToRefs(saleStore)
+const { mecanic, totalPage, lastPage, currentPage, totalData, loading } = storeToRefs(mecanicStore)
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
-const fetchThird = async () => {
-  await saleStore.fetchAll({
-    company_id: authentication.company.id,
+
+
+const fetchMecanic = async () => {
+  await mecanicStore.fetchAll({
     perPage: rowPerPage.value,
     page: currentPage.value,
     searchQuery: searchQuery.value,
+    company_id: authentication.company.id
   })
 }
 
 onMounted(async () => {
-  await fetchThird()
+  await fetchMecanic()
 })
 
 watch(currentPage, async () => {
@@ -34,33 +36,24 @@ watch(rowPerPage, async () => {
   currentPage.value = 1
 })
 watchArray([currentPage, searchQuery, rowPerPage], async () => {
-  await fetchThird()
+  await fetchMecanic()
 })
 
 // 👉 Computing pagination data
 const paginationData = computed(() => {
-  const firstIndex = sales.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
-  const lastIndex = sales.value.length + ((currentPage.value - 1) * totalPage.value)
+  const firstIndex = mecanic.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
+  const lastIndex = mecanic.value.length + ((currentPage.value - 1) * totalPage.value)
 
   return `Mostrando ${firstIndex} a ${lastIndex} de ${totalData.value} registros`
 })
 
 const changeScreen = async (screen: string, userId: number | null = null) => {
-  saleStore.clearFormulario()
-  saleStore.typeAction = screen
+  mecanicStore.clearFormulario()
+  mecanicStore.typeAction = screen
   if (userId)
-    saleStore.fetchInfo(userId)
+    mecanicStore.fetchInfo(userId)
 }
 
-
-// DESCARGAR EXCEL
-const dowloadExcel = async () => {
-  await saleStore.excel({
-    company_id: authentication.company.id
-  }).then(resp => {
-    window.open(pathExcel.value, '_blank');
-  });
-}
 
 
 const deleteData = async (id: number) => {
@@ -72,8 +65,8 @@ const deleteData = async (id: number) => {
     denyButtonText: 'No',
   }).then(async result => {
     if (result.isConfirmed) {
-      await saleStore.fetchDelete(id)
-      await fetchThird()
+      await mecanicStore.fetchDelete(id)
+      await fetchMecanic()
     }
     else if (result.isDenied) {
     }
@@ -87,12 +80,6 @@ const deleteData = async (id: number) => {
     <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
       <div class="me-3" style="width: 80px;">
         <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
-      </div>
-      <div class="me-3" style="width: 80px;">
-        <VBtn mt-2 size="x-small" color="default" variant="text" title="Descargar" @click="dowloadExcel()">
-          <VIcon size="30" icon="mdi-file-excel"></VIcon>
-          Excel
-        </VBtn>
       </div>
 
       <VSpacer />
@@ -113,19 +100,13 @@ const deleteData = async (id: number) => {
       <thead>
         <tr>
           <th scope="col">
-            Referencia
+            Nombre Completo
           </th>
           <th scope="col">
-            Valor Compra
+            Cédula
           </th>
           <th scope="col">
-            Valor Venta
-          </th>
-          <th scope="col">
-            Total
-          </th>
-          <th scope="col">
-            Utilidades
+            Estado
           </th>
           <th scope="col">
             Acciones
@@ -138,31 +119,23 @@ const deleteData = async (id: number) => {
             <PreloadInterno />
           </td>
         </tr>
-        <tr v-for="(item, index) in sales" v-show="!loading" :key="index" style="height: 3.75rem;">
-
+        <tr v-for="(item, index) in mecanic" v-show="!loading" :key="index" style="height: 3.75rem;">
           <td>
             <span>
-              {{ item.inventory_reference }}
+              {{ item.name + ' ' + item.last_name }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.inventory_purchaseValue }}
+              {{ item.identify }}
             </span>
           </td>
           <td>
-            <span>
-              {{ item.price_vehicle }}
+            <span v-if="item.status == 1">
+              Activo
             </span>
-          </td>
-          <td>
-            <span>
-              {{ item.total }}
-            </span>
-          </td>
-          <td>
-            <span>
-              {{ item.utilities }}
+            <span v-else>
+              Inactivo
             </span>
           </td>
           <td class="text-center" style="width: 5rem;">
@@ -177,7 +150,7 @@ const deleteData = async (id: number) => {
         </tr>
       </tbody>
 
-      <tfoot v-show="!sales.length">
+      <tfoot v-show="!mecanic.length">
         <tr>
           <td colspan="4" class="text-center">
             No se encuentran resultados

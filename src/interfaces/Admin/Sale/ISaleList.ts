@@ -5,5 +5,7 @@ export default interface ISaleList {
   inventory_saleValue: null | number
   description: null | string
   total: null | number
-  utilities: null | number
+  utilities: null | number,
+  price_vehicle: null | number,
+  barter: null | string
 }

@@ -2,28 +2,30 @@
 import Swal from 'sweetalert2';
 
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
-import { useCrudSaleStore } from '@/stores/Admin/useCrudSaleStore';
+import { useCrudIncomeVehicleStore } from '@/stores/Admin/useCrudIncomeVehicleStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 
 const authentication = useAuthenticationStore()
-const saleStore = useCrudSaleStore()
+const vehicleincomeStore = useCrudIncomeVehicleStore()
 
 //  data paginate
-const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel } = storeToRefs(saleStore)
+const { incomeVehicles, totalPage, lastPage, currentPage, totalData, loading } = storeToRefs(vehicleincomeStore)
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
-const fetchThird = async () => {
-  await saleStore.fetchAll({
+
+
+const fetchInventory = async () => {
+  await vehicleincomeStore.fetchAll({
     company_id: authentication.company.id,
     perPage: rowPerPage.value,
     page: currentPage.value,
-    searchQuery: searchQuery.value,
+    searchQuery: searchQuery.value
   })
 }
 
 onMounted(async () => {
-  await fetchThird()
+  await fetchInventory()
 })
 
 watch(currentPage, async () => {
@@ -34,33 +36,24 @@ watch(rowPerPage, async () => {
   currentPage.value = 1
 })
 watchArray([currentPage, searchQuery, rowPerPage], async () => {
-  await fetchThird()
+  await fetchInventory()
 })
 
 // 👉 Computing pagination data
 const paginationData = computed(() => {
-  const firstIndex = sales.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
-  const lastIndex = sales.value.length + ((currentPage.value - 1) * totalPage.value)
+  const firstIndex = incomeVehicles.value.length ? ((currentPage.value - 1) * totalPage.value) + 1 : 0
+  const lastIndex = incomeVehicles.value.length + ((currentPage.value - 1) * totalPage.value)
 
   return `Mostrando ${firstIndex} a ${lastIndex} de ${totalData.value} registros`
 })
 
 const changeScreen = async (screen: string, userId: number | null = null) => {
-  saleStore.clearFormulario()
-  saleStore.typeAction = screen
+  vehicleincomeStore.clearFormulario()
+  vehicleincomeStore.typeAction = screen
   if (userId)
-    saleStore.fetchInfo(userId)
+    vehicleincomeStore.fetchInfo(userId)
 }
 
-
-// DESCARGAR EXCEL
-const dowloadExcel = async () => {
-  await saleStore.excel({
-    company_id: authentication.company.id
-  }).then(resp => {
-    window.open(pathExcel.value, '_blank');
-  });
-}
 
 
 const deleteData = async (id: number) => {
@@ -72,12 +65,17 @@ const deleteData = async (id: number) => {
     denyButtonText: 'No',
   }).then(async result => {
     if (result.isConfirmed) {
-      await saleStore.fetchDelete(id)
-      await fetchThird()
+      await vehicleincomeStore.fetchDelete(id)
+      await fetchInventory()
     }
     else if (result.isDenied) {
     }
   })
+}
+
+
+const changeSate = (obj: object) => {
+  vehicleincomeStore.changeSate(obj.id, obj.state)
 }
 </script>
 
@@ -87,12 +85,6 @@ const deleteData = async (id: number) => {
     <VContainer fluid class="d-flex flex-wrap py-4 gap-4">
       <div class="me-3" style="width: 80px;">
         <VSelect v-model="rowPerPage" density="compact" variant="outlined" :items="[10, 20, 30, 50]" />
-      </div>
-      <div class="me-3" style="width: 80px;">
-        <VBtn mt-2 size="x-small" color="default" variant="text" title="Descargar" @click="dowloadExcel()">
-          <VIcon size="30" icon="mdi-file-excel"></VIcon>
-          Excel
-        </VBtn>
       </div>
 
       <VSpacer />
@@ -113,19 +105,25 @@ const deleteData = async (id: number) => {
       <thead>
         <tr>
           <th scope="col">
-            Referencia
+            Dias
+          </th>
+          <th scope="col">
+            Tipo de Vehículo
+          </th>
+          <th scope="col">
+            Marca
+          </th>
+          <th scope="col">
+            Modelo
+          </th>
+          <th scope="col">
+            Placa
           </th>
           <th scope="col">
             Valor Compra
           </th>
           <th scope="col">
-            Valor Venta
-          </th>
-          <th scope="col">
-            Total
-          </th>
-          <th scope="col">
-            Utilidades
+            Estado
           </th>
           <th scope="col">
             Acciones
@@ -134,52 +132,59 @@ const deleteData = async (id: number) => {
       </thead>
       <tbody>
         <tr v-show="loading">
-          <td colspan="4">
+          <td colspan="10">
             <PreloadInterno />
           </td>
         </tr>
-        <tr v-for="(item, index) in sales" v-show="!loading" :key="index" style="height: 3.75rem;">
+        <tr v-for="(item, index) in incomeVehicles" v-show="!loading" :key="index" style="height: 3.75rem;">
+          <td>
+            <VChip size="large" v-if="item.days < 30" color="success"> {{ item.days }}</VChip>
+            <VChip size="large" v-if="item.days >= 16 && item.days <= 30" color="warning"> {{ item.days }}</VChip>
+            <VChip size="large" v-if="item.days > 30" color="error"> {{ item.days }}</VChip>
 
+          </td>
           <td>
             <span>
-              {{ item.inventory_reference }}
+              {{ item.vehicleType }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.inventory_purchaseValue }}
+              {{ item.brand }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.price_vehicle }}
+              {{ item.model }}
             </span>
           </td>
           <td>
-            <span>
-              {{ item.total }}
-            </span>
+            <span>{{ item.plate }}</span>
           </td>
           <td>
-            <span>
-              {{ item.utilities }}
-            </span>
+            <span>{{ item.purchaseValue }}</span>
           </td>
-          <td class="text-center" style="width: 5rem;">
-            <VBtn size="x-small" color="error" variant="text" @click="deleteData(item.id)">
+          <td>
+            <VSelect v-model="item.state" @update:model-value="changeSate(item)"
+              :items="['Ingresado', 'Separado', 'Vendido']"></VSelect>
+          </td>
+          <td class="text-center d-flex justify-content-center aling-items-center">
+            <VBtn class="mr-2" icon size="x-small" color="error" @click="deleteData(item.id)">
               <VIcon size="22" icon="tabler-trash" />
             </VBtn>
 
-            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
+            <VBtn class="mr-2" icon size="x-small" color="default" @click="changeScreen('form', item.id)">
               <VIcon size="22" icon="tabler-edit" />
             </VBtn>
+
+
           </td>
         </tr>
       </tbody>
 
-      <tfoot v-show="!sales.length">
+      <tfoot v-show="!incomeVehicles.length">
         <tr>
-          <td colspan="4" class="text-center">
+          <td colspan="10" class="text-center">
             No se encuentran resultados
           </td>
         </tr>

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Inventory from "@/pages/Admin/Inventory/Components/Form.vue";
 import { useCrudSaleStore } from '@/stores/Admin/useCrudSaleStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
 import { integerValidator, requiredValidator } from '@validators';
@@ -19,9 +20,17 @@ const authentication = useAuthenticationStore()
 const saleStore = useCrudSaleStore()
 const { formulario, inventories, thirds } = storeToRefs(saleStore)
 const errors = ref<Array<string>>([])
-
+const barter = [
+  {
+    value: 1,
+    title: 'Si'
+  },
+  {
+    value: 0,
+    title: 'No'
+  }
+]
 const arrayValidation = ref<Array<string | boolean>>([])
-
 const changeScreen = async (typeAction: string) => {
   saleStore.typeAction = typeAction
   arrayValidation.value = []
@@ -90,7 +99,10 @@ const total = computed(() => {
 });
 const utilities = computed(() => {
   const inventory = inventories.value.find(ele => ele.id == formulario.value.inventory_id)
-  return inventory?.saleValue - (Number(inventory?.purchaseValue ?? 0) + Number(total.value ?? 0))
+  if (!formulario.value.price_vehicle || !formulario.value.inventory_id) {
+    return 0
+  }
+  return Number(formulario.value.price_vehicle ?? 0) - (Number(inventory?.purchaseValue ?? 0) + Number(total.value ?? 0))
 });
 
 
@@ -120,7 +132,6 @@ onMounted(async () => {
             @update:model-value="errors.inventory_id = ''" />
           <div>
             <b>Valor Compra: {{ purchaseValue }}</b> <br>
-            <b>Valor Venta: {{ saleValue }}</b>
           </div>
         </VCol>
         <VCol cols="12" md="8">
@@ -130,13 +141,16 @@ onMounted(async () => {
                 <VSelect :rules="[requiredValidator]" clearable v-model="form.id" item-title="name" item-value="id"
                   :items="thirds" label="Tercero" />
               </VCol>
-              <VCol cols="12" md="4">
+              <VCol cols="12" md="3">
                 <VTextField :rules="[requiredValidator, integerValidator]" v-model="form.amount" label="Monto" />
               </VCol>
-              <VCol cols="12" md="4">
+              <VCol cols="12" md="1">
                 <VBtn size="40" @click="addThird()" flat icon color="primary">
                   <VIcon icon="tabler-plus"></VIcon>
                 </VBtn>
+              </VCol>
+              <VCol cols="12" md="3">
+                <VTextField v-model="formulario.price_vehicle" label="Precio De Venta" />
               </VCol>
             </VRow>
           </VForm>
@@ -144,10 +158,13 @@ onMounted(async () => {
       </VRow>
       <VRow>
         <VCol cols="12" md="4">
+          <VSelect :rules="[requiredValidator]" clearable v-model="formulario.barter" :items="barter" label="Permuta" />
+        </VCol>
+        <VCol cols="12" md="4">
           <VTextarea clearable v-model="formulario.description" :rules="[requiredValidator]"
             :error-messages="errors.description" label="Descripcion" @keypress="errors.description = ''" />
         </VCol>
-        <VCol cols="12" md="6">
+        <VCol cols="12" md="4">
           <VTable class="text-no-wrap">
             <thead>
               <tr>
@@ -187,15 +204,24 @@ onMounted(async () => {
             </tbody>
           </VTable>
         </VCol>
-
       </VRow>
       <VRow>
       </VRow>
       <VRow>
         <VCol cols="12 d-flex justify-content-center">
-          <VBtn color="primary" @click="submitForm">
+          <VBtn color="primary" @click="submitForm" v-show="formulario.barter == 0">
             Guardar
           </VBtn>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol sm="12" v-if="formulario.barter == 1">
+          <VCard>
+            <div class="ml-5 mr-5 mb-5 mt-5">
+              <h3 class="text-left">Ingreso Del Vehiculo</h3>
+              <Inventory @execute-action="formulario.barter = 0" :btn-back="false" />
+            </div>
+          </VCard>
         </VCol>
       </VRow>
     </VForm>
