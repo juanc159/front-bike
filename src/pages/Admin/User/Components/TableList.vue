@@ -57,7 +57,7 @@ const changeScreen = async (screen: string, userId: number | null = null) => {
   storeUser.clearFormulario()
   storeUser.typeAction = screen
   if (userId)
-    storeUser.fetchInfoUser(userId)
+    storeUser.fetchInfo(userId)
 }
 
 // Accion cambio de estado

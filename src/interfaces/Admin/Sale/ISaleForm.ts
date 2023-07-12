@@ -4,5 +4,7 @@ export default interface ISaleForm {
   description: null | string
   thirds: Array<object>
   total: null | number
-  utilities: null | number
+  utilities: null | number,
+  price_vehicle: null | number,
+  barter: null | number
 }

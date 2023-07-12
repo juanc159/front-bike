@@ -1,6 +1,7 @@
 <script lang="ts" setup type="module">
 import Swal from 'sweetalert2';
 
+import { num_miles } from '@/@core/utils/validators';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
 import { useCrudSaleStore } from '@/stores/Admin/useCrudSaleStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
@@ -9,7 +10,7 @@ const authentication = useAuthenticationStore()
 const saleStore = useCrudSaleStore()
 
 //  data paginate
-const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel } = storeToRefs(saleStore)
+const { sales, totalPage, lastPage, currentPage, totalData, loading, pathExcel, formulario } = storeToRefs(saleStore)
 const rowPerPage = ref<number>(10)
 const searchQuery = ref<string>('')
 
@@ -48,8 +49,10 @@ const paginationData = computed(() => {
 const changeScreen = async (screen: string, userId: number | null = null) => {
   saleStore.clearFormulario()
   saleStore.typeAction = screen
-  if (userId)
-    saleStore.fetchInfo(userId)
+  if (userId) {
+    await saleStore.fetchInfo(userId)
+    formulario.value.price_vehicle = num_miles(formulario.value.price_vehicle)
+  }
 }
 
 
@@ -134,7 +137,7 @@ const deleteData = async (id: number) => {
       </thead>
       <tbody>
         <tr v-show="loading">
-          <td colspan="4">
+          <td colspan="6">
             <PreloadInterno />
           </td>
         </tr>
@@ -147,22 +150,22 @@ const deleteData = async (id: number) => {
           </td>
           <td>
             <span>
-              {{ item.inventory_purchaseValue }}
+              {{ num_miles(item.inventory_purchaseValue) }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.inventory_saleValue }}
+              {{ num_miles(item.price_vehicle) }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.total }}
+              {{ num_miles(item.total) }}
             </span>
           </td>
           <td>
             <span>
-              {{ item.utilities }}
+              {{ num_miles(item.utilities) }}
             </span>
           </td>
           <td class="text-center" style="width: 5rem;">
@@ -179,7 +182,7 @@ const deleteData = async (id: number) => {
 
       <tfoot v-show="!sales.length">
         <tr>
-          <td colspan="4" class="text-center">
+          <td colspan="6" class="text-center">
             No se encuentran resultados
           </td>
         </tr>

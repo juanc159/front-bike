@@ -20,7 +20,6 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
       plate: null,
       registrationSite: null,
       purchaseValue: null,
-      saleValue: null,
       vehicleType: null,
       state: "Ingresado",
       days: 1,
@@ -32,6 +31,9 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
     totalPage: 0 as number,
     currentPage: 1 as number,
     lastPage: 0 as number,
+    form: {
+      batter: 'No'
+    }
   }),
   getters: {
   },
@@ -46,7 +48,6 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         plate: null,
         registrationSite: null,
         purchaseValue: null,
-        saleValue: null,
         vehicleType: null,
         state: "Ingresado",
         days: 1,
@@ -82,6 +83,7 @@ export const useCrudInventoryStore = defineStore('useCrudInventoryStore', {
         if (result.data.code === 200) {
           this.formulario = result.data.data
           this.clearFormulario()
+          this.form.batter = 'No'
           toast.toast('Éxito', result.data.message, 'success')
         }
 

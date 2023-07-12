@@ -7,7 +7,6 @@ export default interface IInventoryForm {
   plate: null | string
   registrationSite: null | string
   purchaseValue: null | string
-  saleValue: null | string
   days: null | number
   vehicleType: null | string
 }

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { useCrudInventoryStore } from '@/stores/Admin/useCrudInventoryStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
-import { integerValidator, requiredValidator } from '@validators';
+import { requiredValidator, validarInputNumerosMiles } from '@validators';
+import { emit } from 'process';
 import { VForm } from 'vuetify/components';
 
 const props = defineProps({
@@ -10,8 +11,15 @@ const props = defineProps({
     default: null,
     required: false,
   },
+  btnBack: {
+    type: Boolean,
+    default: true,
+    required: false
+  }
 })
-
+const emit = defineEmits([
+  'executeAction'
+])
 const formValidation = ref<VForm>()
 const authentication = useAuthenticationStore()
 const inventoryStore = useCrudInventoryStore()
@@ -35,8 +43,12 @@ const submitForm = async () => {
 
   const validation = await formValidation.value?.validate()
   if (validation?.valid) {
+    formulario.value.purchaseValue = formulario.value.purchaseValue.replaceAll(".", "")
     const data = await inventoryStore.fetchSave()
-    if (data.status === 200) changeScreen('list')
+    if (data.status === 200) {
+      changeScreen('list')
+      emit('executeAction', { save: true })
+    }
     if (data.status === 422) errors.value = data.error // muestra error del back
   }
 }
@@ -50,7 +62,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <VRow>
+    <VRow v-if="props.btnBack == true">
       <VCol cols="12">
         <div class="col-md-6 d-flex justify-content-end">
           <VBtn color="secondary" @click="changeScreen('back')">
@@ -88,18 +100,15 @@ onMounted(async () => {
           <VTextField v-model="formulario.plate" maxlength="15" :rules="[requiredValidator]"
             :error-messages="errors.plate" label="Placa" @keypress="errors.plate = '';" />
         </VCol>
-        <VCol cols="12" md="4">
+        <VCol cols="12" md="6">
           <VTextField v-model="formulario.registrationSite" maxlength="15" :rules="[requiredValidator]"
             :error-messages="errors.registrationSite" label="Sitio de matricula"
             @keypress="errors.registrationSite = '';" />
         </VCol>
-        <VCol cols="12" md="4">
-          <VTextField v-model="formulario.purchaseValue" maxlength="15" :rules="[requiredValidator, integerValidator]"
-            :error-messages="errors.purchaseValue" label="Valor de Compra" @keypress="errors.purchaseValue = '';" />
-        </VCol>
-        <VCol cols="12" md="4">
-          <VTextField v-model="formulario.saleValue" maxlength="15" :rules="[requiredValidator, integerValidator]"
-            :error-messages="errors.saleValue" label="Valor de Venta" @keypress="errors.saleValue = '';" />
+        <VCol cols="12" md="6">
+          <VTextField v-model="formulario.purchaseValue" maxlength="15" :rules="[requiredValidator]"
+            :error-messages="errors.purchaseValue" label="Valor de Compra" @keypress="errors.purchaseValue = '';"
+            @blur="formulario.purchaseValue = validarInputNumerosMiles(formulario.purchaseValue)" />
         </VCol>
       </VRow>
       <VRow>

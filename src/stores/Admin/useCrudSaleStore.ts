@@ -21,6 +21,8 @@ export const useCrudSaleStore = defineStore('useCrudSaleStore', {
       thirds: [],
       total: 0,
       utilities: 0,
+      price_vehicle: null,
+      barter: null
     } as ISaleForm,
     typeAction: 'list' as string,
     keyList: 0 as number,
@@ -45,7 +47,9 @@ export const useCrudSaleStore = defineStore('useCrudSaleStore', {
         description: null,
         thirds: [],
         total: 0,
-        utilities: 0
+        utilities: 0,
+        price_vehicle: null,
+        barter: null
       }
     },
     async fetchAll(params: object): Promise<void> {

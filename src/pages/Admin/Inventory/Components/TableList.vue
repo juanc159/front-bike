@@ -1,6 +1,7 @@
 <script lang="ts" setup type="module">
 import Swal from 'sweetalert2';
 
+import { num_miles } from '@/@core/utils/validators';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
 import { useCrudInventoryStore } from '@/stores/Admin/useCrudInventoryStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
@@ -120,13 +121,7 @@ const changeSate = (obj: object) => {
             Placa
           </th>
           <th scope="col">
-            Sitio de matricula
-          </th>
-          <th scope="col">
             Valor Compra
-          </th>
-          <th scope="col">
-            Valor Venta
           </th>
           <th scope="col">
             Estado
@@ -168,13 +163,7 @@ const changeSate = (obj: object) => {
             <span>{{ item.plate }}</span>
           </td>
           <td>
-            <span>{{ item.registrationSite }}</span>
-          </td>
-          <td>
-            <span>{{ item.purchaseValue }}</span>
-          </td>
-          <td>
-            <span>{{ item.saleValue }}</span>
+            <span>$ {{ num_miles(item.purchaseValue) }}</span>
           </td>
           <td>
             <VSelect v-model="item.state" @update:model-value="changeSate(item)"

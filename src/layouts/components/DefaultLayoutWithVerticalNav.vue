@@ -3,7 +3,6 @@ import navItems from '@/navigation/vertical'
 import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 // Components
-import NavbarMenuTop from '@/componentsGlobal/NavbarMenuTop.vue'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
@@ -32,7 +31,7 @@ const auth = useAuthenticationStore()
         <NavbarThemeSwitcher />
 
         <VSpacer />
-        <NavbarMenuTop />
+        <!-- <NavbarMenuTop /> -->
 
         <!-- MENU CREAR -->
         <div class="d-flex justify-space-around mr-2" />
