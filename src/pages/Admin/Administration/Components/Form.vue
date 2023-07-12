@@ -20,11 +20,11 @@ const errors = ref<Array<string>>([])
 const status = [
   {
     value: 1,
-    title: 'Activo'
+    title: 'Pagado'
   },
   {
     value: 0,
-    title: 'Inactivo'
+    title: 'Sin Pagar'
   }
 ]
 const arrayValidation = ref<Array<string | boolean>>([])
@@ -73,11 +73,11 @@ onMounted(async () => {
     <VForm ref="formValidation" lazy-validation>
       <VRow>
         <VCol cols="12" md="6">
-          <VTextField v-model="formulario.name" :rules="[requiredValidator]" autocomplete="off"
+          <AppTextField v-model="formulario.name" :rules="[requiredValidator]" autocomplete="off"
             :error-messages="errors.name" label="Nombre" @keypress="errors.name = ''" />
         </VCol>
         <VCol cols="12" md="6">
-          <VTextField v-model="formulario.cost" :rules="[requiredValidator]" autocomplete="off"
+          <AppTextField v-model="formulario.cost" :rules="[requiredValidator]" autocomplete="off"
             :error-messages="errors.cost" @blur="formulario.cost = validarInputNumerosMiles(formulario.cost)"
             label="Costo" @keypress="errors.cost = ''" />
         </VCol>

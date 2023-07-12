@@ -105,22 +105,13 @@ const changeSate = (obj: object) => {
       <thead>
         <tr>
           <th scope="col">
-            Dias
-          </th>
-          <th scope="col">
             Tipo de Vehículo
           </th>
           <th scope="col">
             Marca
           </th>
           <th scope="col">
-            Modelo
-          </th>
-          <th scope="col">
             Placa
-          </th>
-          <th scope="col">
-            Valor Compra
           </th>
           <th scope="col">
             Estado
@@ -137,15 +128,10 @@ const changeSate = (obj: object) => {
           </td>
         </tr>
         <tr v-for="(item, index) in incomeVehicles" v-show="!loading" :key="index" style="height: 3.75rem;">
-          <td>
-            <VChip size="large" v-if="item.days < 30" color="success"> {{ item.days }}</VChip>
-            <VChip size="large" v-if="item.days >= 16 && item.days <= 30" color="warning"> {{ item.days }}</VChip>
-            <VChip size="large" v-if="item.days > 30" color="error"> {{ item.days }}</VChip>
 
-          </td>
           <td>
             <span>
-              {{ item.vehicleType }}
+              {{ item.type_vehicle }}
             </span>
           </td>
           <td>
@@ -154,15 +140,7 @@ const changeSate = (obj: object) => {
             </span>
           </td>
           <td>
-            <span>
-              {{ item.model }}
-            </span>
-          </td>
-          <td>
             <span>{{ item.plate }}</span>
-          </td>
-          <td>
-            <span>{{ item.purchaseValue }}</span>
           </td>
           <td>
             <VSelect v-model="item.state" @update:model-value="changeSate(item)"

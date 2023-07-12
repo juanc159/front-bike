@@ -1,5 +1,5 @@
 export default interface IFormCompany {
-  user_id:number
+  user_id: number
   id?: number
   name: string
   email: string
@@ -14,6 +14,7 @@ export default interface IFormCompany {
   phoneLegalRepresentative: string
   startDate: string
   endDate: string
+  base: string
   headerReport: string | null
   footerReport: string | null
   logo: File | null

@@ -2,7 +2,7 @@
 import { useImageUpload } from '@/composables/useImageUpload'
 import { useCrudCompanyStore } from '@/stores/Admin/useCrudCompanyStore'
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore'
-import { emailValidator, lengthMaxValidator, lengthMinValidator, requiredValidator, soloNumeros } from '@validators'
+import { emailValidator, lengthMaxValidator, lengthMinValidator, requiredValidator, soloNumeros, validarInputNumerosMiles } from '@validators'
 import { VForm } from 'vuetify/components'
 
 const props = defineProps({
@@ -44,6 +44,8 @@ const submitForm = async () => {
     arrayValidator.value.logo = []
   else arrayValidator.value.logo = [requiredValidator(formulario.value.logo)]
 
+
+  formulario.value.base = formulario.value.base.replaceAll(".", "")
   const validation = await formValidation.value?.validate()
   if (validation?.valid) {
     formulario.value.user_id = auth.user.id
@@ -148,6 +150,11 @@ onMounted(async () => {
               label="Correo de representante legal" maxlength="30"
               :rules="[requiredValidator, emailValidator, lengthMaxValidator(formulario.email_rep, 30)]"
               @keypress="errors.email_rep = ''" />
+          </VCol>
+          <VCol cols="4">
+            <VTextField v-model="formulario.base" :error-messages="errors.base" label="Base"
+              @blur="formulario.base = validarInputNumerosMiles(formulario.base)" :rules="[requiredValidator]"
+              @keypress="errors.base = ''" />
           </VCol>
         </VRow>
       </VCard>

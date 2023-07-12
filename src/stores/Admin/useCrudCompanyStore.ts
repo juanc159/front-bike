@@ -11,7 +11,7 @@ import { usePreloadStore } from '@/stores/usePreloadStore';
 const toast = useToast();
 
 export const useCrudCompanyStore = defineStore('useCrudCompanyStore', {
-  state: () => ({ 
+  state: () => ({
     typeAction: "list" as string,
     keyList: 0 as number,
     loading: true as boolean,
@@ -32,6 +32,7 @@ export const useCrudCompanyStore = defineStore('useCrudCompanyStore', {
       identification_rep: "",
       address_rep: "",
       email_rep: "",
+      base: "",
       logo: null,
     }),
     companies: ref<ICompanyList[]>([]),
@@ -63,6 +64,7 @@ export const useCrudCompanyStore = defineStore('useCrudCompanyStore', {
         identification_rep: "",
         address_rep: "",
         email_rep: "",
+        base: "",
         logo: null,
       });
     },

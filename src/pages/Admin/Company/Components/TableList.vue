@@ -1,4 +1,5 @@
 <script lang="ts" setup type="module">
+import { num_miles } from '@/@core/utils/validators';
 import PreloadInterno from '@/componentsGlobal/PreloadInterno.vue';
 import { useCrudCompanyStore } from '@/stores/Admin/useCrudCompanyStore';
 import { useAuthenticationStore } from '@/stores/useAuthenticationStore';
@@ -8,7 +9,7 @@ const companyStoreUseCrud = useCrudCompanyStore()
 const auth = useAuthenticationStore()
 const router = useRouter()
 
-const { currentPage, totalPage, lastPage, totalData, companies, loading }
+const { currentPage, totalPage, lastPage, totalData, companies, loading, formulario }
   = storeToRefs(companyStoreUseCrud)
 
 // menu data paginate
@@ -50,8 +51,11 @@ const paginationData = computed(() => {
 const changeScreen = async (screen: string, companyId?: number) => {
   companyStoreUseCrud.clearFormulario()
   companyStoreUseCrud.typeAction = screen
-  if (companyId)
-    companyStoreUseCrud.fetchInfoCompany(companyId)
+  if (companyId) {
+    await companyStoreUseCrud.fetchInfoCompany(companyId)
+
+    formulario.value.base = num_miles(formulario.value.base)
+  }
 }
 
 const selectCompany = (company: object) => {
@@ -121,6 +125,9 @@ const deleteData = async (id: number) => {
           Teléfono representante
         </th>
         <th scope="col">
+          Base
+        </th>
+        <th scope="col">
           Estado
         </th>
         <th scope="col">
@@ -130,7 +137,7 @@ const deleteData = async (id: number) => {
     </thead>
     <tbody>
       <tr v-show="loading">
-        <td colspan="7">
+        <td colspan="8">
           <PreloadInterno />
         </td>
       </tr>
@@ -161,6 +168,11 @@ const deleteData = async (id: number) => {
           </span>
         </td>
         <td>
+          <span>
+            {{ num_miles(item.base) }}
+          </span>
+        </td>
+        <td>
           <VSwitch v-model="item.state" color="success" inset :value="item.state" :true-value="1" :false-value="0"
             hide-details @click="changeState(item, item.state)" />
         </td>
@@ -181,7 +193,7 @@ const deleteData = async (id: number) => {
 
     <tfoot v-show="!companies.length">
       <tr>
-        <td colspan="7" class="text-center">
+        <td colspan="8" class="text-center">
           No se encuentran resultados
         </td>
       </tr>
