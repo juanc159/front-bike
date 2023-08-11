@@ -1,1 +1,0 @@
-import{_ as o}from"./DashboardBikers.vue_vue_type_script_setup_true_lang-17f0ac0d.js";import"./index-333f41b8.js";import"./validators-da167dd6.js";import"./VCard-faba0bf7.js";import"./createSimpleFunctional-a7e80921.js";import"./VRow-d2a2c669.js";/* empty css              */export{o as default};

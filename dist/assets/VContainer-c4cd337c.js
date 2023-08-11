@@ -1,0 +1,1 @@
+/* empty css              */import{Q as n,a5 as s,a8 as o,W as r,p as l}from"./index-ecce922e.js";const c=n()({name:"VContainer",props:{fluid:{type:Boolean,default:!1},...s(),...o()},setup(e,a){let{slots:t}=a;return r(()=>l(e.tag,{class:["v-container",{"v-container--fluid":e.fluid},e.class],style:e.style},t)),{}}});export{c as V};
