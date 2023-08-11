@@ -2,8 +2,8 @@ import router from '@/router'
 import axios from 'axios'
 
 import { useConfig } from '@/composables/useConfig'
-const { baseURL} = useConfig()
- 
+const { baseURL } = useConfig()
+
 
 const axiosIns = axios.create({
   // You can add your headers here

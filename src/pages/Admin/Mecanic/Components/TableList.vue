@@ -51,7 +51,9 @@ const changeScreen = async (screen: string, userId: number | null = null) => {
   mecanicStore.clearFormulario()
   mecanicStore.typeAction = screen
   if (userId)
-    mecanicStore.fetchInfo(userId)
+    mecanicStore.fetchInfo({
+      id: userId
+    })
 }
 
 
@@ -145,6 +147,9 @@ const deleteData = async (id: number) => {
 
             <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('form', item.id)">
               <VIcon size="22" icon="tabler-edit" />
+            </VBtn>
+            <VBtn icon size="x-small" color="default" variant="text" @click="changeScreen('info', item.id)">
+              <VIcon size="22" icon="mdi-currency-usd" />
             </VBtn>
           </td>
         </tr>

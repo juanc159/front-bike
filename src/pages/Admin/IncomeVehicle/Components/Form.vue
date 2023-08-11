@@ -15,7 +15,12 @@ const props = defineProps({
     type: Boolean,
     default: true,
     required: false
-  }
+  },
+  btnSave: {
+    type: Boolean,
+    default: true,
+    required: false
+  },
 })
 const toast = useToast()
 const headers = [
@@ -27,7 +32,7 @@ const headers = [
 const formValidation = ref<VForm>()
 const authentication = useAuthenticationStore()
 const incomeVehicleStore = useCrudIncomeVehicleStore()
-const { formulario, operatives, typeArrangement } = storeToRefs(incomeVehicleStore)
+const { formulario, operatives, typeArrangement, thirds } = storeToRefs(incomeVehicleStore)
 const errors = ref<Array<string>>([])
 
 const arrayValidation = ref<Array<string | boolean>>([])
@@ -65,7 +70,7 @@ const utilites = computed(() => {
 
 const value_labor = computed(() => {
   let cont = 0
-  arrayTypeArrangement.value.forEach(element => {
+  thirds.value.forEach(element => {
     const valor = String(element.amount).replaceAll('.', '')
     cont += Number(valor ?? 0)
   });
@@ -82,6 +87,8 @@ const submitForm = async () => {
   formulario.value.utilites = Number(String(utilites.value).replaceAll('.', ''))
   formulario.value.value_parts = Number(String(formulario.value.value_parts).replaceAll('.', ''))
 
+  formulario.value.arrayNoDelete = arrayNoDelete.value
+
   const validation = await formValidation.value?.validate()
   if (validation?.valid) {
     const data = await incomeVehicleStore.fetchSave()
@@ -92,16 +99,10 @@ const submitForm = async () => {
   }
 }
 
-interface IarrayTypeArrangement {
-  id?: null | number,
-  type_id: null | number,
-  name: null | string,
-  amount: null | number
-}
+
 const formValidate = ref<VForm>()
-const arrayTypeArrangement = ref<Array<IarrayTypeArrangement>>([])
 const arrayNoDelete = computed(() => {
-  return arrayTypeArrangement.value.filter(ele => ele.delete != 'delete')
+  return thirds.value.filter(ele => ele.delete != 'delete')
 })
 const form = ref({
   type: null,
@@ -117,13 +118,13 @@ const clearForm = () => {
 const addTypeArrangement = (async () => {
   const validation = await formValidate.value?.validate()
   if (validation?.valid) {
-    const search = arrayTypeArrangement.value.find(ele => ele.type_id == form.value.type)
+    const search = thirds.value.find(ele => ele.type_id == form.value.type)
     if (!search) {
       const obj = typeArrangement.value.find(ele => ele.id == form.value.type)
-      arrayTypeArrangement.value.push({
+      thirds.value.push({
         type_id: form.value.type,
         name: obj.name,
-        amount: form.value.amount,
+        amount: form.value.amount.replaceAll('.', ''),
       })
 
     } else {
@@ -133,12 +134,10 @@ const addTypeArrangement = (async () => {
   clearForm()
 })
 const deleteTypeArrangement = (async (index: number) => {
-  if (arrayTypeArrangement.value[index].id) {
-    console.log('if')
-    arrayTypeArrangement.value[index].delete = 'delete'
+  if (thirds.value[index].id) {
+    thirds.value[index].delete = 'delete'
   } else {
-    console.log('else')
-    arrayTypeArrangement.value.splice(index, 1)
+    thirds.value.splice(index, 1)
   }
 })
 onMounted(async () => {
@@ -150,7 +149,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <VRow v-if="props.btnBack == true">
+    <VRow v-if="props.btnBack">
       <VCol cols="12">
         <div class="col-md-6 d-flex justify-content-end">
           <VBtn color="secondary" @click="changeScreen('back')">
@@ -159,6 +158,8 @@ onMounted(async () => {
         </div>
       </VCol>
     </VRow>
+    {{ props.btnBack }}
+    {{ props.btnSave }}
     <VForm ref="formValidation" lazy-validation>
       <VRow>
         <VCol cols="12" md="4" class="mt-1">
@@ -241,6 +242,9 @@ onMounted(async () => {
     <VCol cols="12" md="12" class="mt-2 d-flex mb-5">
       <VDataTable :headers="headers" :items="arrayNoDelete" height="300" fixed-header>
         <!-- full name -->
+        <template #item.amount="{ item }">
+          {{ num_miles(item.raw.amount) }}
+        </template>
         <template #bottom>
 
         </template>
@@ -249,7 +253,7 @@ onMounted(async () => {
         </template>
       </VDataTable>
     </VCol>
-    <VRow>
+    <VRow v-if="props.btnSave">
       <VCol cols="12 d-flex justify-content-center">
         <VBtn color="primary" @click="submitForm">
           Guardar
@@ -258,8 +262,6 @@ onMounted(async () => {
     </VRow>
   </div>
 </template>
-
-
 
 
 

@@ -25,6 +25,10 @@ export const useCrudMecanicStore = defineStore('useCrudMecanicStore', {
     totalPage: 0 as number,
     currentPage: 1 as number,
     lastPage: 0 as number,
+
+    //de info
+    incomeVehiclesSi: [] as Array<object>,
+    incomeVehiclesNo: [] as Array<object>,
   }),
   getters: {
   },
@@ -108,17 +112,31 @@ export const useCrudMecanicStore = defineStore('useCrudMecanicStore', {
       })
     },
 
-    async fetchInfo(id: number): Promise<void> {
+    async fetchInfo(form: object): Promise<void> {
       const preload = usePreloadStore()
       preload.isLoading = true
-      await axiosIns.get(
-        `/mecanic-info/${id}`,
+      await axiosIns.post(
+        "/mecanic-info", form,
       ).then(async result => {
-        console.log('RESULT', result)
         preload.isLoading = false
         this.formulario = await result.data.data
+
+        this.incomeVehiclesSi = result.data.incomeVehiclesSi
+        this.incomeVehiclesNo = result.data.incomeVehiclesNo
+
+
       }).catch(async error => {
         preload.isLoading = false
+        console.log(await error)
+      })
+    },
+
+    async fetchPay(form: object): Promise<void> {
+      await axiosIns.post(
+        "/mecanic-pay", form
+      ).then(result => {
+        console.log(result)
+      }).catch(async error => {
         console.log(await error)
       })
     },

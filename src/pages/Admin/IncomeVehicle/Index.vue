@@ -34,12 +34,12 @@ onUnmounted(() => {
 </template>
 
 <route lang="yaml">
-  meta:
-    action: read
-    subject: Auth
-    redirectIfLoggedIn: true
-    requiresAuth: true
-    requiredPermission: admin.incomeVehicle.index
-  </route>
+meta:
+  action: read
+  subject: Auth
+  redirectIfLoggedIn: true
+  requiresAuth: true
+  requiredPermission: admin.incomeVehicle.index
+</route>
 
 

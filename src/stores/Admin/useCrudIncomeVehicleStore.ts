@@ -36,7 +36,8 @@ export const useCrudIncomeVehicleStore = defineStore('useCrudIncomeVehicleStore'
     currentPage: 1 as number,
     lastPage: 0 as number,
     operatives: [] as Array<object>,
-    typeArrangement: [] as Array<object>
+    typeArrangement: [] as Array<object>,
+    thirds: [] as Array<object>
   }),
   getters: {
   },
@@ -59,6 +60,7 @@ export const useCrudIncomeVehicleStore = defineStore('useCrudIncomeVehicleStore'
         utilites: null,
         company_id: null
       }
+      this.thirds = []
     },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
@@ -136,9 +138,9 @@ export const useCrudIncomeVehicleStore = defineStore('useCrudIncomeVehicleStore'
       await axiosIns.get(
         `/incomeVehicle-info/${id}`,
       ).then(async result => {
-        console.log('RESULT', result)
         preload.isLoading = false
         this.formulario = await result.data.data
+        this.thirds = await result.data.thirds
       }).catch(async error => {
         preload.isLoading = false
         console.log(await error)
