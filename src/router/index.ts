@@ -18,6 +18,7 @@ router.beforeEach((to, from, next) => {
   const authenticationStore = useAuthenticationStore() // obtiene el usuario actual
   const { isAuthenticate, permissions } = storeToRefs(authenticationStore)
 
+
   if (requiresAuth && !isAuthenticate.value) {
     next('/login') // redirige al usuario al login si la ruta requiere autenticación y el usuario no está autenticado
   }
