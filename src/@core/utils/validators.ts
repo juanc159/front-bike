@@ -230,3 +230,17 @@ export const validarDateAfterOrSame = (dateValue: string, dateInit: string): str
   if (validate) return true;
   else return `Este campo tiene que ser antes o igual de ${d1.format('YYYY-MM-DD')}`;
 };
+
+
+export const limitText = (text: string, max_chars: number) => {
+  let limite_text = text;
+  let limite;
+
+  if (!isEmpty(text)) {
+    if (limite_text.length > max_chars) {
+      limite = limite_text.substr(0, max_chars) + " ...";
+      return limite
+    }
+  }
+  return limite_text;
+}

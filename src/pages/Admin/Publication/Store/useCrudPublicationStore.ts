@@ -63,6 +63,19 @@ export const useCrudPublicationStore = defineStore('useCrudPublicationStore', {
         console.log(await error)
       })
     },
+    async fetchViewDetail(id: number): Promise<void> {
+      this.loading = true
+      return await axiosIns.get(
+        '/publication-viewDetail/' + id
+      ).then(result => {
+        this.loading = false
+        return result.data.publication
+      }).catch(async error => {
+        this.loading = false
+        console.log(await error)
+        return {}
+      })
+    },
     async fetchAll(params: object): Promise<void> {
       this.loading = true
       await axiosIns.post(
@@ -203,5 +216,15 @@ export const useCrudPublicationStore = defineStore('useCrudPublicationStore', {
       });
     },
 
+    abrirWhatsApp(text: null | string) {
+      // Reemplaza "1234567890" con tu número de WhatsApp.
+      const numeroWhatsApp = '3123336868';
+
+      // Construye el enlace de WhatsApp.
+      const enlaceWhatsApp = `https://wa.me/${numeroWhatsApp}/?text=${text}`;
+
+      // Abre el enlace en una nueva ventana o pestaña.
+      window.open(enlaceWhatsApp, '_blank');
+    }
   },
 })
