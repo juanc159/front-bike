@@ -1,0 +1,1 @@
+import{e as n,af as t,aO as o,aP as e}from"./index-5157f066.js";const i=n({setup(){const s=t("router-view"),{injectSkinClasses:a}=o();return a(),()=>e("div",{class:"layout-wrapper layout-blank"},e(s))}});export{i as default};

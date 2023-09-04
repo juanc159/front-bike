@@ -1,1 +1,0 @@
-import{_ as o}from"./Form.vue_vue_type_script_setup_true_lang-6c0500d8.js";import"./useCrudMenuStore-14f93381.js";import"./index-ecce922e.js";import"./validators-da167dd6.js";import"./VRow-1ecd9fa6.js";/* empty css              */import"./VTextField-a151c4b5.js";import"./forwardRefs-9d31fcaa.js";import"./VForm-a9ea2bae.js";export{o as default};
